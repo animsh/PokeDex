@@ -8,6 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.animsh.pokedex.adapter.PokemonListAdapter;
 import com.animsh.pokedex.model.PokemonCollection;
+import com.animsh.pokedex.model.PokemonDetails;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,6 +21,8 @@ import retrofit2.Retrofit;
 public class NetworkCallMethods {
     private static final String TAG = "NetworkCallMethods";
     static PokemonCollection pokemonCollection = new PokemonCollection();
+    static PokemonDetails pokemonDetails = new PokemonDetails();
+    static List<PokemonDetails> pokemonDetailsList = new ArrayList<>();
 
     public static PokemonCollection getPokemonCollection(RecyclerView pokemonRecyclerview, Context context) {
         Retrofit retrofit = RetrofitClient.getClient();
@@ -32,14 +38,12 @@ public class NetworkCallMethods {
                     return;
                 }
                 pokemonCollection = response.body();
-                Log.d(TAG, "onResponse: " + pokemonCollection);
-                for (int i = 0; i < pokemonCollection.getPokemonList().size(); i++) {
-                    Log.d(TAG, "onResponse: " + pokemonCollection.getPokemonList().get(i).getName());
-                }
                 PokemonListAdapter pokemonListAdapter = new PokemonListAdapter(pokemonCollection.getPokemonList(), context);
+                pokemonRecyclerview.setHasFixedSize(true);
                 pokemonRecyclerview.setLayoutManager(new LinearLayoutManager(context));
                 pokemonRecyclerview.setAdapter(pokemonListAdapter);
                 pokemonListAdapter.notifyDataSetChanged();
+                Log.d(TAG, "onResponse: " + pokemonCollection);
             }
 
             @Override
@@ -48,5 +52,24 @@ public class NetworkCallMethods {
             }
         });
         return pokemonCollection;
+    }
+
+    public static PokemonDetails getPokemonDetail(int id) {
+        Retrofit retrofit = RetrofitClient.getClient();
+        PokeApiCalls pokeApiCalls = retrofit.create(PokeApiCalls.class);
+        Call<PokemonDetails> call = pokeApiCalls.getPokemonDetails(id);
+        call.enqueue(new Callback<PokemonDetails>() {
+            @Override
+            public void onResponse(Call<PokemonDetails> call, Response<PokemonDetails> response) {
+                Log.d(TAG, "onResponse: " + response.body());
+                pokemonDetails = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<PokemonDetails> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+        return pokemonDetails;
     }
 }
