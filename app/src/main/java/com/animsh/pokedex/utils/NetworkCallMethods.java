@@ -42,7 +42,7 @@ public class NetworkCallMethods {
                 pokemonRecyclerview.setHasFixedSize(true);
                 pokemonRecyclerview.setLayoutManager(new LinearLayoutManager(context));
                 pokemonRecyclerview.setAdapter(pokemonListAdapter);
-                pokemonListAdapter.notifyDataSetChanged();
+                pokemonRecyclerview.setItemViewCacheSize(2000);
                 Log.d(TAG, "onResponse: " + pokemonCollection);
             }
 
