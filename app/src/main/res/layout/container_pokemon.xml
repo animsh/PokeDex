@@ -4,13 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="14dp">
+    app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pokemon_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_pokemon">
+
+        <View
+            android:id="@+id/pokemon_container_root"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/background_pokemon_container"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/pokemon_number"
@@ -41,13 +51,21 @@
         <LinearLayout
             android:id="@+id/pokemon_image_container"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="@drawable/ic_rectangle"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_pokemon_profile"
             android:gravity="center"
             android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/base_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/image"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/pokemon_image"

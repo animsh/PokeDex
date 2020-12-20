@@ -1,6 +1,7 @@
 package com.animsh.pokedex.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.animsh.pokedex.R;
 import com.animsh.pokedex.model.Pokemon;
 import com.animsh.pokedex.model.PokemonDetails;
+import com.animsh.pokedex.ui.PokemonDetailsActivity;
 import com.animsh.pokedex.utils.PokeApiCalls;
 import com.animsh.pokedex.utils.RetrofitClient;
 import com.bumptech.glide.Glide;
@@ -92,17 +94,46 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
         return pokemonList.size();
     }
 
+    public String getProperName(String oldName) {
+        // stores each characters to a char array
+        char[] charArray = oldName.toCharArray();
+        boolean foundSpace = true;
+
+        for (int i = 0; i < charArray.length; i++) {
+
+            // if the array element is a letter
+            if (Character.isLetter(charArray[i])) {
+
+                // check space is present before the letter
+                if (foundSpace) {
+
+                    // change the letter into uppercase
+                    charArray[i] = Character.toUpperCase(charArray[i]);
+                    foundSpace = false;
+                }
+            } else {
+                // if the new character is not character
+                foundSpace = true;
+            }
+        }
+
+        // convert the char array to the string
+        return String.valueOf(charArray);
+    }
+
     public class PokemonVH extends RecyclerView.ViewHolder {
         TextView pokemonName, pokemonNumber, type1, type2;
-        ImageView pokemonImage;
+        ImageView pokemonImage, baseImage;
         LinearLayout pokemonImageContainer;
         ConstraintLayout pokemonContainer;
+        Palette.Swatch palette;
 
         public PokemonVH(@NonNull View itemView) {
             super(itemView);
             pokemonName = itemView.findViewById(R.id.pokemon_name);
             pokemonNumber = itemView.findViewById(R.id.pokemon_number);
             pokemonImage = itemView.findViewById(R.id.pokemon_image);
+            baseImage = itemView.findViewById(R.id.base_image);
             pokemonContainer = itemView.findViewById(R.id.pokemon_container);
             pokemonImageContainer = itemView.findViewById(R.id.pokemon_image_container);
             type1 = itemView.findViewById(R.id.type_1);
@@ -146,9 +177,11 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
                 newId = "#" + id;
             }
             pokemonNumber.setText(newId);
-            String url = "https://pokeres.bastionbot.org/images/pokemon/" + id + ".png";
+            String base = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
+            String url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
+
             Glide.with(context).asBitmap()
-                    .load(url)
+                    .load(base)
                     .listener(new RequestListener<Bitmap>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
@@ -159,7 +192,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                             Palette p = Palette.from(resource).generate();
                             List<Palette.Swatch> pss = p.getSwatches();
-                            Palette.Swatch palette = getDominantSwatch(p);
+                            palette = getDominantSwatch(p);
                             pokemonContainer.setBackgroundColor(palette.getRgb());
                             pokemonName.setTextColor(palette.getTitleTextColor());
                             pokemonNumber.setTextColor(palette.getTitleTextColor());
@@ -167,42 +200,35 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
                             GradientDrawable drawable2 = (GradientDrawable) type2.getBackground();
                             type1.setTextColor(palette.getBodyTextColor());
                             type2.setTextColor(palette.getBodyTextColor());
-                            drawable1.setStroke(2, palette.getBodyTextColor()); // set stroke width and stroke color
-                            drawable2.setStroke(2, palette.getBodyTextColor()); // set stroke width and stroke color
+                            drawable1.setStroke(2, palette.getBodyTextColor());
+                            drawable1.setCornerRadius(20f);// set stroke width and stroke color
+                            drawable2.setStroke(2, palette.getBodyTextColor());
+                            drawable2.setCornerRadius(20f);// set stroke width and stroke color
+                            Glide.with(context).asBitmap()
+                                    .load(url)
+                                    .placeholder(R.drawable.ic_pokeball)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .into(pokemonImage);
                             return false;
                         }
                     })
                     .placeholder(R.drawable.ic_pokeball)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(pokemonImage);
-        }
+                    .into(baseImage);
 
-        public String getProperName(String oldName) {
-            // stores each characters to a char array
-            char[] charArray = oldName.toCharArray();
-            boolean foundSpace = true;
-
-            for (int i = 0; i < charArray.length; i++) {
-
-                // if the array element is a letter
-                if (Character.isLetter(charArray[i])) {
-
-                    // check space is present before the letter
-                    if (foundSpace) {
-
-                        // change the letter into uppercase
-                        charArray[i] = Character.toUpperCase(charArray[i]);
-                        foundSpace = false;
-                    }
-                } else {
-                    // if the new character is not character
-                    foundSpace = true;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent pokemonDetails = new Intent(context, PokemonDetailsActivity.class);
+                    pokemonDetails.putExtra("bColor", palette.getRgb());
+                    pokemonDetails.putExtra("tColor", palette.getTitleTextColor());
+                    pokemonDetails.putExtra("btColor", palette.getBodyTextColor());
+                    context.startActivity(pokemonDetails);
                 }
-            }
-
-            // convert the char array to the string
-            return String.valueOf(charArray);
+            });
         }
 
     }
+
 }
+
