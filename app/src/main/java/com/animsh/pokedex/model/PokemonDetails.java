@@ -1,5 +1,14 @@
 package com.animsh.pokedex.model;
 
+import com.animsh.pokedex.model.pokemondetails.Abilities;
+import com.animsh.pokedex.model.pokemondetails.Forms;
+import com.animsh.pokedex.model.pokemondetails.GameIndices;
+import com.animsh.pokedex.model.pokemondetails.Moves;
+import com.animsh.pokedex.model.pokemondetails.Species;
+import com.animsh.pokedex.model.pokemondetails.Sprites;
+import com.animsh.pokedex.model.pokemondetails.Stats;
+import com.animsh.pokedex.model.pokemondetails.Types;
+
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;

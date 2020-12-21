@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.animsh.pokedex.R;
 import com.animsh.pokedex.model.PokemonCollection;
-import com.animsh.pokedex.utils.NetworkCallMethods;
+import com.animsh.pokedex.network.NetworkCallMethods;
 
 public class MainActivity extends AppCompatActivity {
     public String TAG = "MainActivity.class";
