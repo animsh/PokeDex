@@ -223,6 +223,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
                     pokemonDetails.putExtra("bColor", palette.getRgb());
                     pokemonDetails.putExtra("tColor", palette.getTitleTextColor());
                     pokemonDetails.putExtra("btColor", palette.getBodyTextColor());
+                    pokemonDetails.putExtra("id", id);
                     context.startActivity(pokemonDetails);
                 }
             });
