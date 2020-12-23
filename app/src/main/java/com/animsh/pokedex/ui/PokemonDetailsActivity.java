@@ -2,13 +2,16 @@ package com.animsh.pokedex.ui;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -60,6 +63,10 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
     PokemonDetails pokemonDetails;
 
+    ProgressBar progressBarSpecies, progressBarAbilities, progressBarBaseStat;
+    ConstraintLayout layoutSpecies;
+    LinearLayout layoutStat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +100,10 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         txtAbilities.setTextColor(titleColor);
         txtBaseStats.setTextColor(titleColor);
 
+        progressBarBaseStat.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
+        progressBarAbilities.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
+        progressBarSpecies.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
+
 
         setUpProgressView(progressViewHP, supporterViewHP, labelHP, backgroundColor, titleColor, bodyTextColor);
         setUpProgressView(progressViewAttack, supporterViewAttack, labelAttack, backgroundColor, titleColor, bodyTextColor);
@@ -122,6 +133,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                         pokemonDetail.setText(flavorTextEntriesList.get(i).getFlavor_text().replace("\n", ""));
                     }
                 }
+
             }
 
             @Override
@@ -165,6 +177,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                     pokemonAbilityRecyclerView.setAdapter(new AbilitiesAdapter(abilitiesList, PokemonDetailsActivity.this, backgroundColor, titleColor, bodyTextColor));
                     pokemonAbilityRecyclerView.setLayoutManager(new LinearLayoutManager(PokemonDetailsActivity.this));
                     pokemonAbilityRecyclerView.setHasFixedSize(true);
+
                 }
 
                 List<Stats> statsList = pokemonDetails.getStats();
@@ -219,6 +232,21 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                         .placeholder(R.drawable.ic_pokeball)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(pokemonImage);
+
+                Handler handler = new Handler();
+
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBarAbilities.setVisibility(View.GONE);
+                        pokemonAbilityRecyclerView.setVisibility(View.VISIBLE);
+                        progressBarSpecies.setVisibility(View.GONE);
+                        layoutSpecies.setVisibility(View.VISIBLE);
+                    }
+                }, 500);
+
+                progressBarBaseStat.setVisibility(View.GONE);
+                layoutStat.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -295,6 +323,14 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         supporterViewSPAttack = findViewById(R.id.supporter_view_sp_attack);
         supporterViewSPDefence = findViewById(R.id.supporter_view_sp_defence);
         supporterViewSpeed = findViewById(R.id.supporter_view_speed);
+
+        progressBarSpecies = findViewById(R.id.progressBarSContainer);
+        progressBarAbilities = findViewById(R.id.progressBarAContainer);
+        progressBarBaseStat = findViewById(R.id.progressBarBSContainer);
+
+        layoutSpecies = findViewById(R.id.layout_species);
+        layoutStat = findViewById(R.id.layout_stats);
+
     }
 
     public void setProgressViewProgress(ProgressView progressView, float progress, float maxProgress) {
