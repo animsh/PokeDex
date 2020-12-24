@@ -115,32 +115,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
         Retrofit retrofit = RetrofitClient.getClient();
         PokeApiCalls pokeApiCalls = retrofit.create(PokeApiCalls.class);
-        Call<PokemonSpecies> pokemonSpeciesCall = pokeApiCalls.getPokemonSpecie(intentId);
-        pokemonSpeciesCall.enqueue(new Callback<PokemonSpecies>() {
-            @Override
-            public void onResponse(Call<PokemonSpecies> call, Response<PokemonSpecies> response) {
-                PokemonSpecies pokemonSpecies = response.body();
-                List<Genera> genera = pokemonSpecies.getGenera();
-                for (int i = 0; i < genera.size(); i++) {
-                    if (genera.get(i).getLanguage().getName().equals("en")) {
-                        pokemonType.setText(genera.get(i).getGenus());
-                    }
-                }
 
-                List<FlavorTextEntries> flavorTextEntriesList = pokemonSpecies.getFlavor_text_entries();
-                for (int i = 0; i < flavorTextEntriesList.size(); i++) {
-                    if (flavorTextEntriesList.get(i).getVersion().getName().equals("firered")) {
-                        pokemonDetail.setText(flavorTextEntriesList.get(i).getFlavor_text().replace("\n", ""));
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<PokemonSpecies> call, Throwable t) {
-
-            }
-        });
         Call<PokemonDetails> call = pokeApiCalls.getPokemonDetails(intentId);
         call.enqueue(new Callback<PokemonDetails>() {
             @Override
@@ -196,18 +171,28 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
                 int id = pokemonDetails.getId();
                 String newId = "";
+                String baseId = "";
                 if (String.valueOf(id).length() == 1) {
-                    newId = "#000" + id;
-                } else if (String.valueOf(id).length() == 2) {
                     newId = "#00" + id;
-                } else if (String.valueOf(id).length() == 3) {
+                    baseId = "00" + id;
+                } else if (String.valueOf(id).length() == 2) {
                     newId = "#0" + id;
+                    baseId = "0" + id;
+                } else if (String.valueOf(id).length() == 3) {
+                    newId = "#" + id;
+                    baseId = String.valueOf(id);
                 } else {
                     newId = "#" + id;
+                    baseId = String.valueOf(id);
                 }
                 pokemonNumber.setText(newId);
-                String url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
 
+                String url;
+                if (id < 893 | id >= 10001) {
+                    url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
+                } else {
+                    url = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + baseId + ".png";
+                }
                 if (pokemonDetails.getTypes().size() > 1) {
                     type1.setText(pokemonDetails.getTypes().get(0).getType().getName().toUpperCase());
                     type2.setVisibility(View.VISIBLE);
@@ -244,6 +229,36 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                         layoutSpecies.setVisibility(View.VISIBLE);
                     }
                 }, 500);
+
+                String[] speciesUrl = pokemonDetails.getSpecies().getUrl().split("\\/");
+                int speciesId = Integer.parseInt(speciesUrl[speciesUrl.length - 1]);
+                Call<PokemonSpecies> pokemonSpeciesCall = pokeApiCalls.getPokemonSpecie(speciesId);
+                pokemonSpeciesCall.enqueue(new Callback<PokemonSpecies>() {
+                    @Override
+                    public void onResponse(Call<PokemonSpecies> call, Response<PokemonSpecies> response) {
+                        PokemonSpecies pokemonSpecies = response.body();
+                        List<Genera> genera = pokemonSpecies.getGenera();
+                        for (int i = 0; i < genera.size(); i++) {
+                            if (genera.get(i).getLanguage().getName().equals("en")) {
+                                pokemonType.setText(genera.get(i).getGenus());
+                            }
+                        }
+
+                        List<FlavorTextEntries> flavorTextEntriesList = pokemonSpecies.getFlavor_text_entries();
+                        for (int i = 0; i < flavorTextEntriesList.size(); i++) {
+                            if (flavorTextEntriesList.get(i).getLanguage().getName().equals("en")) {
+                                pokemonDetail.setText(flavorTextEntriesList.get(i).getFlavor_text().replace("\n", ""));
+                                break;
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<PokemonSpecies> call, Throwable t) {
+
+                    }
+                });
 
                 progressBarBaseStat.setVisibility(View.GONE);
                 layoutStat.setVisibility(View.VISIBLE);
@@ -349,7 +364,12 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setColor(backgroundColor);
         shape.setCornerRadii(new float[]{20, 20, 0, 0, 0, 0, 20, 20});
-        supporterView.setBackgroundColor(backgroundColor);
+
+        GradientDrawable shape2 = new GradientDrawable();
+        shape2.setShape(GradientDrawable.RECTANGLE);
+        shape2.setColor(backgroundColor);
+        shape2.setCornerRadii(new float[]{0, 0, 20, 20, 20, 20, 0, 0});
+        supporterView.setBackgroundDrawable(shape2);
         label.setBackgroundDrawable(shape);
         label.setTextColor(titleColor);
     }

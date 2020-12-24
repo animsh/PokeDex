@@ -389,7 +389,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -460,7 +460,7 @@
 
                                     <View
                                         android:id="@+id/supporter_view_1"
-                                        android:layout_width="8dp"
+                                        android:layout_width="14dp"
                                         android:layout_height="0dp"
                                         android:layout_marginTop="1dp"
                                         android:layout_marginBottom="1dp"
@@ -542,7 +542,7 @@
 
                                     <View
                                         android:id="@+id/supporter_view_attack"
-                                        android:layout_width="8dp"
+                                        android:layout_width="14dp"
                                         android:layout_height="0dp"
                                         android:layout_marginTop="1dp"
                                         android:layout_marginBottom="1dp"
@@ -623,7 +623,7 @@
 
                                     <View
                                         android:id="@+id/supporter_view_defence"
-                                        android:layout_width="8dp"
+                                        android:layout_width="14dp"
                                         android:layout_height="0dp"
                                         android:layout_marginTop="1dp"
                                         android:layout_marginBottom="1dp"
@@ -704,7 +704,7 @@
 
                                     <View
                                         android:id="@+id/supporter_view_sp_attack"
-                                        android:layout_width="8dp"
+                                        android:layout_width="14dp"
                                         android:layout_height="0dp"
                                         android:layout_marginTop="1dp"
                                         android:layout_marginBottom="1dp"
@@ -785,7 +785,7 @@
 
                                     <View
                                         android:id="@+id/supporter_view_sp_defence"
-                                        android:layout_width="8dp"
+                                        android:layout_width="14dp"
                                         android:layout_height="0dp"
                                         android:layout_marginTop="1dp"
                                         android:layout_marginBottom="1dp"
@@ -866,7 +866,7 @@
 
                                     <View
                                         android:id="@+id/supporter_view_speed"
-                                        android:layout_width="8dp"
+                                        android:layout_width="14dp"
                                         android:layout_height="0dp"
                                         android:layout_marginTop="1dp"
                                         android:layout_marginBottom="1dp"

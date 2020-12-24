@@ -28,7 +28,7 @@ public class NetworkCallMethods {
     public static PokemonCollection getPokemonCollection(RecyclerView pokemonRecyclerview, Context context) {
         Retrofit retrofit = RetrofitClient.getClient();
         PokeApiCalls pokeApiCalls = retrofit.create(PokeApiCalls.class);
-        Call<PokemonCollection> call = pokeApiCalls.getAllPokemonCollection();
+        Call<PokemonCollection> call = pokeApiCalls.getAllPokemonCollection(20, 20);
 
         call.enqueue(new Callback<PokemonCollection>() {
             @Override
@@ -39,7 +39,7 @@ public class NetworkCallMethods {
                     return;
                 }
                 pokemonCollection = response.body();
-                PokemonListAdapter pokemonListAdapter = new PokemonListAdapter(pokemonCollection.getPokemonList(), context);
+                PokemonListAdapter pokemonListAdapter = new PokemonListAdapter(context);
                 pokemonRecyclerview.setHasFixedSize(true);
                 pokemonRecyclerview.setLayoutManager(new LinearLayoutManager(context));
                 pokemonRecyclerview.setAdapter(pokemonListAdapter);

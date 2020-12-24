@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,18 +42,23 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.PokemonVH> {
+public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "ADAPTER";
-    List<Pokemon> pokemonList;
-    Context context;
+    private final int ITEM = 0;
+    private final int LOADING = 1;
+    private List<Pokemon> pokemonList;
+    private Context context;
+
+    private boolean isLoadingAdded = false;
+    private boolean retryPageLoad = false;
 
     public PokemonListAdapter() {
     }
 
-    public PokemonListAdapter(List<Pokemon> pokemonList, Context context) {
-        this.pokemonList = pokemonList;
+    public PokemonListAdapter(Context context) {
         this.context = context;
+        pokemonList = new ArrayList<>();
     }
 
     public static Palette.Swatch getDominantSwatch(Palette palette) {
@@ -77,21 +83,50 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
         return swatches.size() > 0 ? swatches.get(0).getRgb() : 0;
     }
 
-    @NonNull
-    @Override
-    public PokemonVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new PokemonVH(LayoutInflater.from(context)
-                .inflate(R.layout.container_pokemon, parent, false));
+    public List<Pokemon> getPokemonList() {
+        return pokemonList;
     }
 
+    @NonNull
     @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        RecyclerView.ViewHolder viewHolder = null;
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+
+        switch (viewType) {
+            case ITEM:
+                View viewItem = inflater.inflate(R.layout.container_pokemon, viewGroup, false);
+                viewHolder = new PokemonVH(viewItem);
+                break;
+            case LOADING:
+                View viewLoading = inflater.inflate(R.layout.item_progress, viewGroup, false);
+                viewHolder = new LoadingVH(viewLoading);
+                break;
+        }
+
+        return viewHolder;
+    }
+   /* @Override
     public void onBindViewHolder(@NonNull PokemonVH holder, int position) {
         holder.setData(pokemonList.get(position), position);
+    }*/
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+        switch (getItemViewType(i)) {
+            case ITEM:
+                PokemonVH viewHolderPokemon = (PokemonVH) viewHolder;
+                viewHolderPokemon.setData(pokemonList.get(i), i);
+                break;
+            case LOADING:
+
+                break;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return pokemonList.size();
+        return pokemonList == null ? 0 : pokemonList.size();
     }
 
     public String getProperName(String oldName) {
@@ -121,6 +156,64 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
         return String.valueOf(charArray);
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return (position == pokemonList.size() - 1 && isLoadingAdded) ? LOADING : ITEM;
+    }
+
+    public void agregarPokemones(List<Pokemon> pokemonArrayList) {
+        this.pokemonList.addAll(pokemonArrayList);
+        notifyDataSetChanged();
+    }
+
+    public void addLoadingFooter() {
+        isLoadingAdded = true;
+    }
+
+    public void removeLoadingFooter() {
+        isLoadingAdded = false;
+    }
+
+    private Pokemon getItem(int position) {
+        return pokemonList.get(position);
+    }
+
+    public void addAll(List<Pokemon> pokemonResults) {
+        for (Pokemon result : pokemonResults) {
+            add(result);
+        }
+    }
+
+    private void add(Pokemon result) {
+        pokemonList.add(result);
+        notifyItemInserted(pokemonList.size() - 1);
+    }
+
+    public void clear() {
+        isLoadingAdded = false;
+        while (getItemCount() > 0) {
+            remove(getItem(0));
+        }
+    }
+
+    private void remove(Pokemon r) {
+        int position = pokemonList.indexOf(r);
+        if (position > -1) {
+            pokemonList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    class LoadingVH extends RecyclerView.ViewHolder {
+        private ProgressBar mProgressBar;
+
+        LoadingVH(View itemView) {
+            super(itemView);
+            mProgressBar = itemView.findViewById(R.id.loadmore_progress);
+        }
+
+    }
+
     public class PokemonVH extends RecyclerView.ViewHolder {
         TextView pokemonName, pokemonNumber, type1, type2;
         ImageView pokemonImage, baseImage;
@@ -141,7 +234,10 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
         }
 
         public void setData(Pokemon pokemon, int position) {
-            int id = position + 1;
+
+            String[] pokemonUrl = pokemon.getUrl().split("\\/");
+            Log.d(TAG, "setData: " + pokemonUrl[pokemonUrl.length - 1]);
+            int id = Integer.parseInt(pokemonUrl[pokemonUrl.length - 1]);
             Retrofit retrofit = RetrofitClient.getClient();
             PokeApiCalls pokeApiCalls = retrofit.create(PokeApiCalls.class);
             Call<PokemonDetails> call = pokeApiCalls.getPokemonDetails(id);
@@ -150,12 +246,14 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
                 public void onResponse(Call<PokemonDetails> call, Response<PokemonDetails> response) {
                     Log.d(TAG, "onResponse: " + response.body());
                     PokemonDetails pokemonDetails = response.body();
-                    if (pokemonDetails.getTypes().size() > 1) {
-                        type1.setText(pokemonDetails.getTypes().get(0).getType().getName().toUpperCase());
-                        type2.setVisibility(View.VISIBLE);
-                        type2.setText(pokemonDetails.getTypes().get(1).getType().getName().toUpperCase());
-                    } else if (pokemonDetails.getTypes().size() == 1) {
-                        type1.setText(pokemonDetails.getTypes().get(0).getType().getName().toUpperCase());
+                    if (pokemonDetails.getTypes() != null) {
+                        if (pokemonDetails.getTypes().size() > 1) {
+                            type1.setText(pokemonDetails.getTypes().get(0).getType().getName().toUpperCase());
+                            type2.setVisibility(View.VISIBLE);
+                            type2.setText(pokemonDetails.getTypes().get(1).getType().getName().toUpperCase());
+                        } else if (pokemonDetails.getTypes().size() == 1) {
+                            type1.setText(pokemonDetails.getTypes().get(0).getType().getName().toUpperCase());
+                        }
                     }
                 }
 
@@ -167,19 +265,33 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
 
             pokemonName.setText(getProperName(pokemon.getName()));
             String newId = "";
+            String baseId = "";
             if (String.valueOf(id).length() == 1) {
-                newId = "#000" + id;
-            } else if (String.valueOf(id).length() == 2) {
                 newId = "#00" + id;
-            } else if (String.valueOf(id).length() == 3) {
+                baseId = "00" + id;
+            } else if (String.valueOf(id).length() == 2) {
                 newId = "#0" + id;
+                baseId = "0" + id;
+            } else if (String.valueOf(id).length() == 3) {
+                newId = "#" + id;
+                baseId = String.valueOf(id);
             } else {
                 newId = "#" + id;
+                baseId = String.valueOf(id);
             }
-            pokemonNumber.setText(newId);
-            String base = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
-            String url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
 
+            pokemonNumber.setText(newId);
+
+            String base;
+            String url;
+
+            if (id < 893 | id >= 10001) {
+                base = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
+                url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
+            } else {
+                base = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + baseId + ".png";
+                url = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + baseId + ".png";
+            }
             Glide.with(context).asBitmap()
                     .load(base)
                     .listener(new RequestListener<Bitmap>() {
