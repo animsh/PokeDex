@@ -82,8 +82,8 @@
 
                     <ImageView
                         android:id="@+id/pokemon_image"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         android:layout_marginStart="20dp"
                         android:src="@drawable/image" />
                 </LinearLayout>
@@ -389,7 +389,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -440,7 +440,6 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="35dp"
                                         android:paddingTop="1dp"
-                                        android:paddingEnd="1dp"
                                         android:paddingBottom="1dp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -521,7 +520,6 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="35dp"
                                         android:paddingTop="1dp"
-                                        android:paddingEnd="1dp"
                                         android:paddingBottom="1dp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -603,7 +601,6 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="35dp"
                                         android:paddingTop="1dp"
-                                        android:paddingEnd="1dp"
                                         android:paddingBottom="1dp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -684,7 +681,6 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="35dp"
                                         android:paddingTop="1dp"
-                                        android:paddingEnd="1dp"
                                         android:paddingBottom="1dp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -765,7 +761,6 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="35dp"
                                         android:paddingTop="1dp"
-                                        android:paddingEnd="1dp"
                                         android:paddingBottom="1dp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -846,7 +841,6 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="35dp"
                                         android:paddingTop="1dp"
-                                        android:paddingEnd="1dp"
                                         android:paddingBottom="1dp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"

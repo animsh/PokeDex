@@ -39,6 +39,7 @@ import com.bumptech.glide.request.target.Target;
 import com.skydoves.progressview.ProgressView;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -156,18 +157,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                 }
 
                 List<Stats> statsList = pokemonDetails.getStats();
-                int maxProgress = 0;
-                for (int i = 0; i < statsList.size(); i++) {
-                    if (statsList.get(i).getBase_stat() > maxProgress) {
-                        maxProgress = statsList.get(i).getBase_stat();
-                    }
-                }
-                setProgressViewProgress(progressViewHP, statsList.get(0).getBase_stat(), maxProgress);
-                setProgressViewProgress(progressViewAttack, statsList.get(1).getBase_stat(), maxProgress);
-                setProgressViewProgress(progressViewDefence, statsList.get(2).getBase_stat(), maxProgress);
-                setProgressViewProgress(progressViewSPAttack, statsList.get(3).getBase_stat(), maxProgress);
-                setProgressViewProgress(progressViewSPDefence, statsList.get(4).getBase_stat(), maxProgress);
-                setProgressViewProgress(progressViewSpeed, statsList.get(5).getBase_stat(), maxProgress);
+
 
                 int id = pokemonDetails.getId();
                 String newId = "";
@@ -187,9 +177,25 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                 }
                 pokemonNumber.setText(newId);
 
+                ArrayList<Integer> idArrayList = new ArrayList<>();
+                for (int i = 10027; i <= 10032; i++) {
+                    idArrayList.add(i);
+                }
+                idArrayList.add(10061);
+                for (int i = 10080; i <= 10085; i++) {
+                    idArrayList.add(i);
+                }
+                for (int i = 10091; i < 10220; i++) {
+                    idArrayList.add(i);
+                }
+
                 String url;
                 if (id < 893 | id >= 10001) {
-                    url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
+                    if (idArrayList.contains(id)) {
+                        url = "https://raw.githubusercontent.com/animsh/PokemonSprites/main/imagesHQ/" + id + ".png";
+                    } else {
+                        url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
+                    }
                 } else {
                     url = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + baseId + ".png";
                 }
@@ -218,17 +224,6 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(pokemonImage);
 
-                Handler handler = new Handler();
-
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBarAbilities.setVisibility(View.GONE);
-                        pokemonAbilityRecyclerView.setVisibility(View.VISIBLE);
-                        progressBarSpecies.setVisibility(View.GONE);
-                        layoutSpecies.setVisibility(View.VISIBLE);
-                    }
-                }, 500);
 
                 String[] speciesUrl = pokemonDetails.getSpecies().getUrl().split("\\/");
                 int speciesId = Integer.parseInt(speciesUrl[speciesUrl.length - 1]);
@@ -247,10 +242,37 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                         List<FlavorTextEntries> flavorTextEntriesList = pokemonSpecies.getFlavor_text_entries();
                         for (int i = 0; i < flavorTextEntriesList.size(); i++) {
                             if (flavorTextEntriesList.get(i).getLanguage().getName().equals("en")) {
-                                pokemonDetail.setText(flavorTextEntriesList.get(i).getFlavor_text().replace("\n", ""));
+                                pokemonDetail.setText(flavorTextEntriesList.get(i).getFlavor_text().replace("\n", " "));
                                 break;
                             }
                         }
+                        int maxProgress = 0;
+                        for (int i = 0; i < statsList.size(); i++) {
+                            if (statsList.get(i).getBase_stat() > maxProgress) {
+                                maxProgress = statsList.get(i).getBase_stat();
+                            }
+                        }
+                        Handler handler = new Handler();
+
+                        int finalMaxProgress = maxProgress;
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBarAbilities.setVisibility(View.GONE);
+                                pokemonAbilityRecyclerView.setVisibility(View.VISIBLE);
+                                progressBarSpecies.setVisibility(View.GONE);
+                                layoutSpecies.setVisibility(View.VISIBLE);
+                                progressBarBaseStat.setVisibility(View.GONE);
+                                layoutStat.setVisibility(View.VISIBLE);
+                                setProgressViewProgress(progressViewHP, statsList.get(0).getBase_stat(), finalMaxProgress);
+                                setProgressViewProgress(progressViewAttack, statsList.get(1).getBase_stat(), finalMaxProgress);
+                                setProgressViewProgress(progressViewDefence, statsList.get(2).getBase_stat(), finalMaxProgress);
+                                setProgressViewProgress(progressViewSPAttack, statsList.get(3).getBase_stat(), finalMaxProgress);
+                                setProgressViewProgress(progressViewSPDefence, statsList.get(4).getBase_stat(), finalMaxProgress);
+                                setProgressViewProgress(progressViewSpeed, statsList.get(5).getBase_stat(), finalMaxProgress);
+                            }
+                        }, 500);
+
 
                     }
 
@@ -260,8 +282,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                     }
                 });
 
-                progressBarBaseStat.setVisibility(View.GONE);
-                layoutStat.setVisibility(View.VISIBLE);
+
             }
 
             @Override

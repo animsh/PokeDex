@@ -3,6 +3,7 @@ package com.animsh.pokedex.ui;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         pokemonRecyclerview = findViewById(R.id.pokemon_recyclerview);
         progressBar = findViewById(R.id.main_progress);

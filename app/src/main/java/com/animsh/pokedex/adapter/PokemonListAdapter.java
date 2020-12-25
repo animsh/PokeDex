@@ -106,10 +106,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         return viewHolder;
     }
-   /* @Override
-    public void onBindViewHolder(@NonNull PokemonVH holder, int position) {
-        holder.setData(pokemonList.get(position), position);
-    }*/
+
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
@@ -119,7 +116,6 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 viewHolderPokemon.setData(pokemonList.get(i), i);
                 break;
             case LOADING:
-
                 break;
         }
     }
@@ -285,9 +281,28 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             String base;
             String url;
 
+            ArrayList<Integer> idArrayList = new ArrayList<>();
+            for (int i = 10027; i <= 10032; i++) {
+                idArrayList.add(i);
+            }
+            idArrayList.add(10061);
+            for (int i = 10080; i <= 10085; i++) {
+                idArrayList.add(i);
+            }
+            for (int i = 10091; i < 10220; i++) {
+                idArrayList.add(i);
+            }
+
+            Log.d(TAG, "setData: " + idArrayList.size() + idArrayList.contains(id));
+
             if (id < 893 | id >= 10001) {
-                base = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
-                url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
+                if (idArrayList.contains(id)) {
+                    base = "https://raw.githubusercontent.com/animsh/PokemonSprites/main/imagesHQ/" + id + ".png";
+                    url = "https://raw.githubusercontent.com/animsh/PokemonSprites/main/imagesHQ/" + id + ".png";
+                } else {
+                    base = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
+                    url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
+                }
             } else {
                 base = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + baseId + ".png";
                 url = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + baseId + ".png";
@@ -321,7 +336,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     .placeholder(R.drawable.ic_pokeball)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(pokemonImage);
-                            return false;
+                            return true;
                         }
                     })
                     .placeholder(R.drawable.ic_pokeball)
@@ -331,12 +346,14 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent pokemonDetails = new Intent(context, PokemonDetailsActivity.class);
-                    pokemonDetails.putExtra("bColor", palette.getRgb());
-                    pokemonDetails.putExtra("tColor", palette.getTitleTextColor());
-                    pokemonDetails.putExtra("btColor", palette.getBodyTextColor());
-                    pokemonDetails.putExtra("id", id);
-                    context.startActivity(pokemonDetails);
+                    if (palette != null) {
+                        Intent pokemonDetails = new Intent(context, PokemonDetailsActivity.class);
+                        pokemonDetails.putExtra("bColor", palette.getRgb());
+                        pokemonDetails.putExtra("tColor", palette.getTitleTextColor());
+                        pokemonDetails.putExtra("btColor", palette.getBodyTextColor());
+                        pokemonDetails.putExtra("id", id);
+                        context.startActivity(pokemonDetails);
+                    }
                 }
             });
         }
