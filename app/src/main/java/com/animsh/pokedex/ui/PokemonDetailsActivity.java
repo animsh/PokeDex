@@ -60,7 +60,6 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
     ProgressView progressViewHP, progressViewAttack, progressViewDefence, progressViewSPAttack, progressViewSPDefence, progressViewSpeed;
     TextView labelHP, labelAttack, labelDefence, labelSPAttack, labelSPDefence, labelSpeed;
-    View supporterViewHP, supporterViewAttack, supporterViewDefence, supporterViewSPAttack, supporterViewSPDefence, supporterViewSpeed;
 
     PokemonDetails pokemonDetails;
 
@@ -106,12 +105,12 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         progressBarSpecies.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
 
 
-        setUpProgressView(progressViewHP, supporterViewHP, labelHP, backgroundColor, titleColor, bodyTextColor);
-        setUpProgressView(progressViewAttack, supporterViewAttack, labelAttack, backgroundColor, titleColor, bodyTextColor);
-        setUpProgressView(progressViewDefence, supporterViewDefence, labelDefence, backgroundColor, titleColor, bodyTextColor);
-        setUpProgressView(progressViewSPAttack, supporterViewSPAttack, labelSPAttack, backgroundColor, titleColor, bodyTextColor);
-        setUpProgressView(progressViewSPDefence, supporterViewSPDefence, labelSPDefence, backgroundColor, titleColor, bodyTextColor);
-        setUpProgressView(progressViewSpeed, supporterViewSpeed, labelSpeed, backgroundColor, titleColor, bodyTextColor);
+        setUpProgressView(progressViewHP, labelHP, backgroundColor, titleColor, bodyTextColor);
+        setUpProgressView(progressViewAttack, labelAttack, backgroundColor, titleColor, bodyTextColor);
+        setUpProgressView(progressViewDefence, labelDefence, backgroundColor, titleColor, bodyTextColor);
+        setUpProgressView(progressViewSPAttack, labelSPAttack, backgroundColor, titleColor, bodyTextColor);
+        setUpProgressView(progressViewSPDefence, labelSPDefence, backgroundColor, titleColor, bodyTextColor);
+        setUpProgressView(progressViewSpeed, labelSpeed, backgroundColor, titleColor, bodyTextColor);
 
 
         Retrofit retrofit = RetrofitClient.getClient();
@@ -353,13 +352,6 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         labelSPDefence = findViewById(R.id.txt_sp_defence);
         labelSpeed = findViewById(R.id.txt_speed);
 
-        supporterViewHP = findViewById(R.id.supporter_view_1);
-        supporterViewAttack = findViewById(R.id.supporter_view_attack);
-        supporterViewDefence = findViewById(R.id.supporter_view_defence);
-        supporterViewSPAttack = findViewById(R.id.supporter_view_sp_attack);
-        supporterViewSPDefence = findViewById(R.id.supporter_view_sp_defence);
-        supporterViewSpeed = findViewById(R.id.supporter_view_speed);
-
         progressBarSpecies = findViewById(R.id.progressBarSContainer);
         progressBarAbilities = findViewById(R.id.progressBarAContainer);
         progressBarBaseStat = findViewById(R.id.progressBarBSContainer);
@@ -376,7 +368,9 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         progressView.setLabelText(String.valueOf(intProgress));
     }
 
-    public void setUpProgressView(ProgressView progressView, View supporterView, TextView label, int backgroundColor, int titleColor, int bodyTextColor) {
+    public void setUpProgressView(ProgressView progressView, TextView label, int backgroundColor, int titleColor, int bodyTextColor) {
+        float[] collection = {0f, 0f, 20f, 20f, 20f, 20f, 0f, 0f};
+        progressView.setRadiusCollection(collection);
         progressView.getHighlightView().setColor(backgroundColor);
         progressView.setLabelColorOuter(backgroundColor);
         progressView.setLabelColorInner(bodyTextColor);
@@ -385,12 +379,6 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setColor(backgroundColor);
         shape.setCornerRadii(new float[]{20, 20, 0, 0, 0, 0, 20, 20});
-
-        GradientDrawable shape2 = new GradientDrawable();
-        shape2.setShape(GradientDrawable.RECTANGLE);
-        shape2.setColor(backgroundColor);
-        shape2.setCornerRadii(new float[]{0, 0, 20, 20, 20, 20, 0, 0});
-        supporterView.setBackgroundDrawable(shape2);
         label.setBackgroundDrawable(shape);
         label.setTextColor(titleColor);
     }
