@@ -18,6 +18,7 @@ import com.animsh.pokedex.model.Pokemon;
 import com.animsh.pokedex.model.PokemonCollection;
 import com.animsh.pokedex.network.PokeApiCalls;
 import com.animsh.pokedex.utils.RetrofitClient;
+import com.skydoves.transformationlayout.TransformationCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        TransformationCompat.onTransformationStartContainer(this);
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);

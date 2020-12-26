@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.skydoves.transformationlayout.TransformationLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -216,6 +218,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         LinearLayout pokemonImageContainer;
         ConstraintLayout pokemonContainer;
         Palette.Swatch palette;
+        TransformationLayout transformationLayout;
 
         public PokemonVH(@NonNull View itemView) {
             super(itemView);
@@ -227,6 +230,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             pokemonImageContainer = itemView.findViewById(R.id.pokemon_image_container);
             type1 = itemView.findViewById(R.id.type_1);
             type2 = itemView.findViewById(R.id.type_2);
+            transformationLayout = itemView.findViewById(R.id.transformationLayout);
         }
 
         public void setData(Pokemon pokemon, int position) {
@@ -289,7 +293,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             for (int i = 10080; i <= 10085; i++) {
                 idArrayList.add(i);
             }
-            for (int i = 10091; i < 10220; i++) {
+            for (int i = 10091; i <= 10220; i++) {
                 idArrayList.add(i);
             }
 
@@ -347,12 +351,14 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
                     if (palette != null) {
+                        Bundle bundle = transformationLayout.withContext(context, "myTransitionName");
                         Intent pokemonDetails = new Intent(context, PokemonDetailsActivity.class);
                         pokemonDetails.putExtra("bColor", palette.getRgb());
                         pokemonDetails.putExtra("tColor", palette.getTitleTextColor());
                         pokemonDetails.putExtra("btColor", palette.getBodyTextColor());
                         pokemonDetails.putExtra("id", id);
-                        context.startActivity(pokemonDetails);
+                        pokemonDetails.putExtra("TransformationParams", transformationLayout.getParcelableParams());
+                        context.startActivity(pokemonDetails, bundle);
                     }
                 }
             });

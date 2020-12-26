@@ -37,6 +37,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.skydoves.progressview.ProgressView;
+import com.skydoves.transformationlayout.TransformationCompat;
+import com.skydoves.transformationlayout.TransformationLayout;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -69,6 +71,8 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        TransformationLayout.Params params = getIntent().getParcelableExtra("TransformationParams");
+        TransformationCompat.onTransformationEndContainer(this, params);
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
@@ -184,7 +188,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                 for (int i = 10080; i <= 10085; i++) {
                     idArrayList.add(i);
                 }
-                for (int i = 10091; i < 10220; i++) {
+                for (int i = 10091; i <= 10220; i++) {
                     idArrayList.add(i);
                 }
 
@@ -370,7 +374,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
     public void setUpProgressView(ProgressView progressView, TextView label, int backgroundColor, int titleColor, int bodyTextColor) {
         float[] collection = {0f, 0f, 20f, 20f, 20f, 20f, 0f, 0f};
-        progressView.setRadiusCollection(collection);
+        progressView.setRadiusArray(collection);
         progressView.getHighlightView().setColor(backgroundColor);
         progressView.setLabelColorOuter(backgroundColor);
         progressView.setLabelColorInner(bodyTextColor);

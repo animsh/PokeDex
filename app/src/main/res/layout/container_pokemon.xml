@@ -1,120 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.skydoves.transformationlayout.TransformationLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/transformationLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="10dp">
+    app:transformation_duration="550">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/pokemon_container"
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_pokemon">
+        android:layout_margin="8dp"
+        app:cardCornerRadius="10dp">
 
-        <View
-            android:id="@+id/pokemon_container_root"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pokemon_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@drawable/background_pokemon_container"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/pokemon_number"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:text="#0001"
-            android:textColor="@color/colorSubText"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/pokemon_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/pokemon_name" />
+            android:background="@drawable/background_pokemon">
 
-        <TextView
-            android:id="@+id/pokemon_name"
-            style="@style/MyCustomFontTextAppearance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:text="Pokemon Name"
-            android:textColor="@color/colorSubText"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/pokemon_number"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/pokemon_image_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_pokemon_profile"
-            android:gravity="center"
-            android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/base_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/image"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/pokemon_image"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_pokeball" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/pokemon_image_container"
-            app:layout_constraintStart_toStartOf="@+id/pokemon_number"
-            app:layout_constraintTop_toBottomOf="@+id/pokemon_name">
+            <View
+                android:id="@+id/pokemon_container_root"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@drawable/background_pokemon_container"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/type_1"
-                android:layout_width="match_parent"
+                android:id="@+id/pokemon_number"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/background_label"
-                android:padding="5dp"
-                android:text="Grass"
-                android:textAlignment="center"
+                android:layout_marginStart="15dp"
+                android:text="#0001"
                 android:textColor="@color/colorSubText"
-                android:textSize="12sp" />
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/pokemon_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/pokemon_name" />
 
             <TextView
-                android:id="@+id/type_2"
-                android:layout_width="match_parent"
+                android:id="@+id/pokemon_name"
+                style="@style/MyCustomFontTextAppearance"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/background_label"
-                android:padding="5dp"
-                android:text="Poison"
-                android:textAlignment="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:text="Pokemon Name"
                 android:textColor="@color/colorSubText"
-                android:textSize="12sp"
-                android:visibility="gone" />
-        </LinearLayout>
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/pokemon_number"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/pokemon_image_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_pokemon_profile"
+                android:gravity="center"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/base_image"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/image"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/pokemon_image"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/ic_pokeball" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/pokemon_image_container"
+                app:layout_constraintStart_toStartOf="@+id/pokemon_number"
+                app:layout_constraintTop_toBottomOf="@+id/pokemon_name">
+
+                <TextView
+                    android:id="@+id/type_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_label"
+                    android:padding="5dp"
+                    android:text="Grass"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorSubText"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/type_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_label"
+                    android:padding="5dp"
+                    android:text="Poison"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorSubText"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</com.skydoves.transformationlayout.TransformationLayout>
+
