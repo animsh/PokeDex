@@ -52,4 +52,8 @@ dependencies {
     // Transformation
     implementation "com.github.skydoves:transformationlayout:1.0.6"
 
+    // MaterialSearchView
+    implementation 'com.github.mancj:MaterialSearchBar:0.8.5'
+
+
 }

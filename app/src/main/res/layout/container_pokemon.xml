@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.skydoves.transformationlayout.TransformationLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/transformationLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:transformation_duration="550">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="10dp">
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.skydoves.transformationlayout.TransformationLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/transformationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="10dp">
+        app:transformation_duration="550">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pokemon_container"
@@ -121,9 +121,7 @@
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-</com.skydoves.transformationlayout.TransformationLayout>
+    </com.skydoves.transformationlayout.TransformationLayout>
+</androidx.cardview.widget.CardView>
 
