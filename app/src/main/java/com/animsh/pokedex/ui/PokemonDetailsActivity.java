@@ -126,7 +126,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<PokemonDetails> call, Response<PokemonDetails> response) {
                 Log.d(TAG, "onResponse: " + response.body());
                 pokemonDetails = response.body();
-                pokemonName.setText(getProperName(pokemonDetails.getName()));
+                pokemonName.setText(getProperName(pokemonDetails.getName().replace("-", " ")));
 
                 double weightKg = (double) pokemonDetails.getWeight() / 10;
                 String txtWeightKg = new DecimalFormat("####.#").format(weightKg) + " kg";

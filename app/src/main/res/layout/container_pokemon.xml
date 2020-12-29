@@ -102,7 +102,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/background_label"
                     android:padding="5dp"
-                    android:text="Grass"
+                    android:text="Loading.."
                     android:textAlignment="center"
                     android:textColor="@color/colorSubText"
                     android:textSize="12sp" />
@@ -115,7 +115,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/background_label"
                     android:padding="5dp"
-                    android:text="Poison"
+                    android:text="Loading.."
                     android:textAlignment="center"
                     android:textColor="@color/colorSubText"
                     android:textSize="12sp"

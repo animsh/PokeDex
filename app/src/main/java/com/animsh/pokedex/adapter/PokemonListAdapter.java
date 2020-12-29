@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -44,16 +46,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
     private static final String TAG = "ADAPTER";
     private final int ITEM = 0;
     private final int LOADING = 1;
     private List<Pokemon> pokemonList;
+    private final boolean retryPageLoad = false;
+    private List<Pokemon> pokemonListClone;
     private Context context;
 
     private boolean isLoadingAdded = false;
-    private boolean retryPageLoad = false;
+    private List<Pokemon> pokemonListSearchResult;
 
     public PokemonListAdapter() {
     }
@@ -61,6 +65,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public PokemonListAdapter(Context context) {
         this.context = context;
         pokemonList = new ArrayList<>();
+        pokemonListClone = new ArrayList<>();
     }
 
     public static Palette.Swatch getDominantSwatch(Palette palette) {
@@ -116,6 +121,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             case ITEM:
                 PokemonVH viewHolderPokemon = (PokemonVH) viewHolder;
                 viewHolderPokemon.setData(pokemonList.get(i), i);
+                viewHolderPokemon.setIsRecyclable(false);
                 break;
             case LOADING:
                 break;
@@ -125,6 +131,11 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemCount() {
         return pokemonList == null ? 0 : pokemonList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     public String getProperName(String oldName) {
@@ -184,6 +195,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void add(Pokemon result) {
         pokemonList.add(result);
+        pokemonListClone = pokemonList;
         notifyItemInserted(pokemonList.size() - 1);
     }
 
@@ -198,12 +210,40 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         int position = pokemonList.indexOf(r);
         if (position > -1) {
             pokemonList.remove(position);
+            pokemonListClone = pokemonList;
             notifyItemRemoved(position);
         }
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                String term = constraint.toString();
+                if (term.isEmpty())
+                    pokemonListSearchResult = pokemonListClone;
+                else {
+                    pokemonListSearchResult = new ArrayList<>();
+                    for (Pokemon item : pokemonListClone)
+                        if (item.getName().toLowerCase().contains(term.toLowerCase()) | item.getUrl().toLowerCase().contains(term.toLowerCase()))
+                            pokemonListSearchResult.add(item);
+                }
+                results.values = pokemonListSearchResult;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                pokemonList = (List<Pokemon>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
     class LoadingVH extends RecyclerView.ViewHolder {
-        private ProgressBar mProgressBar;
+        private final ProgressBar mProgressBar;
 
         LoadingVH(View itemView) {
             super(itemView);
@@ -263,7 +303,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             });
 
-            pokemonName.setText(getProperName(pokemon.getName()));
+            pokemonName.setText(getProperName(pokemon.getName().replace("-", " ")));
             String newId = "";
             String baseId = "";
             if (String.valueOf(id).length() == 1) {

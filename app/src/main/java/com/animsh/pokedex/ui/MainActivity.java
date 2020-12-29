@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.animsh.pokedex.R;
 import com.animsh.pokedex.adapter.CustomSuggestionsAdapter;
 import com.animsh.pokedex.adapter.PokemonListAdapter;
-import com.animsh.pokedex.listener.PaginationScrollListener;
 import com.animsh.pokedex.model.Pokemon;
 import com.animsh.pokedex.model.PokemonCollection;
 import com.animsh.pokedex.network.PokeApiCalls;
@@ -40,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
     public String TAG = "MainActivity.class";
     public RecyclerView pokemonRecyclerview;
     PokemonListAdapter pokemonListAdapter;
-    private boolean isLoading = false;
+    private final boolean isLoading = false;
     private boolean isLastPage = false;
-    private int currentPage = PAGE_START;
-    private int offset = 0;
+    private final int currentPage = PAGE_START;
+    private final int offset = 0;
     private ProgressBar progressBar;
     private MaterialSearchBar materialSearchBar;
-    private List<Pokemon> suggestions = new ArrayList<>();
+    private final List<Pokemon> suggestions = new ArrayList<>();
     private CustomSuggestionsAdapter customSuggestionsAdapter;
 
     @Override
@@ -63,14 +61,6 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.main_progress);
         materialSearchBar = findViewById(R.id.searchBar);
         materialSearchBar.getPlaceHolderView().setTextAppearance(this, R.style.MyCustomFontTextAppearance);
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        customSuggestionsAdapter = new CustomSuggestionsAdapter(inflater);
-        for (int i = 1; i < 11; i++) {
-            suggestions.add(new Pokemon("b" + i, "" + i * 10));
-        }
-
-        customSuggestionsAdapter.setSuggestions(suggestions);
-        materialSearchBar.setCustomSuggestionAdapter(customSuggestionsAdapter);
         materialSearchBar.addTextChangeListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -80,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 Log.d("LOG_TAG", getClass().getSimpleName() + " text changed " + materialSearchBar.getText());
                 // send the entered text to our filter and let it manage everything
-                customSuggestionsAdapter.getFilter().filter(materialSearchBar.getText());
+                pokemonListAdapter.getFilter().filter(materialSearchBar.getText());
             }
 
             @Override
@@ -98,30 +88,6 @@ public class MainActivity extends AppCompatActivity {
         pokemonRecyclerview.setItemViewCacheSize(2000);
         pokemonRecyclerview.setItemAnimator(new DefaultItemAnimator());
 
-        pokemonRecyclerview.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
-            @Override
-            protected void loadMoreItems() {
-
-                isLoading = true;
-                currentPage += 1;
-                loadNextPage();
-            }
-
-            @Override
-            public int getTotalPageCount() {
-                return TOTAL_PAGES;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return isLastPage;
-            }
-
-            @Override
-            public boolean isLoading() {
-                return isLoading;
-            }
-        });
 
         loadFirstPage();
     }
@@ -129,12 +95,10 @@ public class MainActivity extends AppCompatActivity {
     private Call<PokemonCollection> callPokemonService() {
         Retrofit retrofit = RetrofitClient.getClient();
         PokeApiCalls pokeApiCalls = retrofit.create(PokeApiCalls.class);
-        return pokeApiCalls.getAllPokemonCollection(26, offset);
+        return pokeApiCalls.getAllPokemonCollection(1118, offset);
     }
 
     private void loadFirstPage() {
-        offset = 0;
-        currentPage = PAGE_START;
 
         callPokemonService().enqueue(new Callback<PokemonCollection>() {
             @Override
@@ -149,8 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onResponse: " + pokemonCollection.getPokemonList().get(pokemonCollection.getPokemonList().size() - 1).getName());
                 pokemonListAdapter.addAll(pokemonCollection.getPokemonList());
 
-                if (currentPage <= TOTAL_PAGES) pokemonListAdapter.addLoadingFooter();
-                else isLastPage = true;
+                isLastPage = true;
                 Log.d(TAG, "onResponse: " + pokemonCollection);
             }
 
@@ -161,33 +124,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadNextPage() {
-        offset += 26;
-        Log.d(TAG, "loadNextPage: " + currentPage);
-
-        callPokemonService().enqueue(new Callback<PokemonCollection>() {
-            @Override
-            public void onResponse(Call<PokemonCollection> call, Response<PokemonCollection> response) {
-                if (response.isSuccessful()) {
-                    pokemonListAdapter.removeLoadingFooter();
-                    isLoading = false;
-
-                    PokemonCollection pokemonCollection = response.body();
-                    List<Pokemon> results = pokemonCollection.getPokemonList();
-                    pokemonListAdapter.addAll(results);
-
-                    if (currentPage != TOTAL_PAGES) pokemonListAdapter.addLoadingFooter();
-                    else isLastPage = true;
-                } else {
-                    Log.d(TAG, "onResponseFail" + response.errorBody());
-                    pokemonListAdapter.removeLoadingFooter();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PokemonCollection> call, Throwable t) {
-
-            }
-        });
-    }
 }
