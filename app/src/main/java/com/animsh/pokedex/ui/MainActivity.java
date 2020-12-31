@@ -14,18 +14,15 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.animsh.materialsearchbar.MaterialSearchBar;
 import com.animsh.pokedex.R;
-import com.animsh.pokedex.adapter.CustomSuggestionsAdapter;
 import com.animsh.pokedex.adapter.PokemonListAdapter;
-import com.animsh.pokedex.model.Pokemon;
 import com.animsh.pokedex.model.PokemonCollection;
 import com.animsh.pokedex.network.PokeApiCalls;
 import com.animsh.pokedex.utils.RetrofitClient;
-import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.skydoves.transformationlayout.TransformationCompat;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,19 +30,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int TOTAL_PAGES = 43;
-    private static final int PAGE_START = 1;
+    private final boolean isLoading = false;
+    private final int offset = 0;
     public String TAG = "MainActivity.class";
     public RecyclerView pokemonRecyclerview;
     PokemonListAdapter pokemonListAdapter;
-    private final boolean isLoading = false;
     private boolean isLastPage = false;
-    private final int currentPage = PAGE_START;
-    private final int offset = 0;
     private ProgressBar progressBar;
     private MaterialSearchBar materialSearchBar;
-    private final List<Pokemon> suggestions = new ArrayList<>();
-    private CustomSuggestionsAdapter customSuggestionsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +73,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         pokemonListAdapter = new PokemonListAdapter(this);
+        pokemonListAdapter.setHasStableIds(true);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         pokemonRecyclerview.setHasFixedSize(true);
+        pokemonRecyclerview.setNestedScrollingEnabled(false);
         pokemonRecyclerview.setLayoutManager(linearLayoutManager);
         pokemonRecyclerview.setAdapter(pokemonListAdapter);
         pokemonRecyclerview.setItemViewCacheSize(2000);
         pokemonRecyclerview.setItemAnimator(new DefaultItemAnimator());
-
-
         loadFirstPage();
     }
 
@@ -102,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         callPokemonService().enqueue(new Callback<PokemonCollection>() {
             @Override
-            public void onResponse(Call<PokemonCollection> call, Response<PokemonCollection> response) {
+            public void onResponse(@NotNull Call<PokemonCollection> call, @NotNull Response<PokemonCollection> response) {
 
                 if (response.code() != 200) {
                     Log.d(TAG, "onResponse: Check Your Network Connection");
@@ -118,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<PokemonCollection> call, Throwable t) {
+            public void onFailure(@NotNull Call<PokemonCollection> call, @NotNull Throwable t) {
                 Log.d(TAG, "onFailure: " + t.getMessage());
             }
         });

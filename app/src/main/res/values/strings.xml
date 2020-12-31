@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">PokeDex</string>
+    <string name="text_loading">Loading…</string>
+    <string name="hidden">Hidden</string>
+    <string name="info_btn">info btn</string>
+    <string name="back_image">back image</string>
+    <string name="front_image">front image</string>
+    <string name="species">Species</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="abilities">Abilities</string>
+    <string name="base_stats">Base Stats</string>
+    <string name="hp">HP</string>
+    <string name="attack">Attack</string>
+    <string name="defence">Defence</string>
+    <string name="sp_attack">Sp. Attack</string>
+    <string name="sp_defence">Sp. Defence</string>
+    <string name="speed">Speed</string>
+    <string name="splash_screen">splash screen</string>
 </resources>

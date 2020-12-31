@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -53,7 +53,7 @@ dependencies {
     implementation "com.github.skydoves:transformationlayout:1.0.6"
 
     // MaterialSearchView
-    implementation 'com.github.mancj:MaterialSearchBar:0.8.5'
+    implementation 'com.github.animsh:MaterialSearchBar:1.0.0'
 
 
 }

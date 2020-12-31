@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.mancj.materialsearchbar.MaterialSearchBar
+        <com.animsh.materialsearchbar.MaterialSearchBar
             android:id="@+id/searchBar"
             style="@style/MyCustomTheme"
             android:layout_width="match_parent"

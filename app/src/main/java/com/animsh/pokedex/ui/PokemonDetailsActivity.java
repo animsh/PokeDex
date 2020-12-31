@@ -40,6 +40,8 @@ import com.skydoves.progressview.ProgressView;
 import com.skydoves.transformationlayout.TransformationCompat;
 import com.skydoves.transformationlayout.TransformationLayout;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -123,20 +125,20 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         Call<PokemonDetails> call = pokeApiCalls.getPokemonDetails(intentId);
         call.enqueue(new Callback<PokemonDetails>() {
             @Override
-            public void onResponse(Call<PokemonDetails> call, Response<PokemonDetails> response) {
+            public void onResponse(@NotNull Call<PokemonDetails> call, @NotNull Response<PokemonDetails> response) {
                 Log.d(TAG, "onResponse: " + response.body());
                 pokemonDetails = response.body();
                 pokemonName.setText(getProperName(pokemonDetails.getName().replace("-", " ")));
 
                 double weightKg = (double) pokemonDetails.getWeight() / 10;
-                String txtWeightKg = new DecimalFormat("####.#").format(weightKg) + " kg";
+                String txtWeightKg = new DecimalFormat("#######.#").format(weightKg) + " kg";
                 double weightLBS = ((double) pokemonDetails.getWeight() / 4.536);
-                String txtWeightLBS = new DecimalFormat("####.##").format(weightLBS) + " lbs";
+                String txtWeightLBS = new DecimalFormat("######.##").format(weightLBS) + " lbs";
                 String weight = txtWeightLBS + " (" + txtWeightKg + ")";
                 pokemonWeight.setText(weight);
 
                 double heightMeter = (double) pokemonDetails.getHeight() / 10;
-                String txtHeightMeter = new DecimalFormat("####.##").format(heightMeter) + " m";
+                String txtHeightMeter = new DecimalFormat("######.##").format(heightMeter) + " m";
                 double heightFeet = ((double) pokemonDetails.getHeight() / 3.048);
                 String txtHeightFeet = new DecimalFormat("0.0").format(heightFeet);
                 String[] listString = txtHeightFeet.split("\\.");
@@ -163,8 +165,8 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
 
                 int id = pokemonDetails.getId();
-                String newId = "";
-                String baseId = "";
+                String newId;
+                String baseId;
                 if (String.valueOf(id).length() == 1) {
                     newId = "#00" + id;
                     baseId = "00" + id;
@@ -233,7 +235,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                 Call<PokemonSpecies> pokemonSpeciesCall = pokeApiCalls.getPokemonSpecie(speciesId);
                 pokemonSpeciesCall.enqueue(new Callback<PokemonSpecies>() {
                     @Override
-                    public void onResponse(Call<PokemonSpecies> call, Response<PokemonSpecies> response) {
+                    public void onResponse(@NotNull Call<PokemonSpecies> call, @NotNull Response<PokemonSpecies> response) {
                         PokemonSpecies pokemonSpecies = response.body();
                         List<Genera> genera = pokemonSpecies.getGenera();
                         for (int i = 0; i < genera.size(); i++) {
@@ -266,13 +268,15 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                 progressBarSpecies.setVisibility(View.GONE);
                                 layoutSpecies.setVisibility(View.VISIBLE);
                                 progressBarBaseStat.setVisibility(View.GONE);
-                                layoutStat.setVisibility(View.VISIBLE);
-                                setProgressViewProgress(progressViewHP, statsList.get(0).getBase_stat(), finalMaxProgress);
-                                setProgressViewProgress(progressViewAttack, statsList.get(1).getBase_stat(), finalMaxProgress);
-                                setProgressViewProgress(progressViewDefence, statsList.get(2).getBase_stat(), finalMaxProgress);
-                                setProgressViewProgress(progressViewSPAttack, statsList.get(3).getBase_stat(), finalMaxProgress);
-                                setProgressViewProgress(progressViewSPDefence, statsList.get(4).getBase_stat(), finalMaxProgress);
-                                setProgressViewProgress(progressViewSpeed, statsList.get(5).getBase_stat(), finalMaxProgress);
+                                if (statsList.size() > 0) {
+                                    layoutStat.setVisibility(View.VISIBLE);
+                                    setProgressViewProgress(progressViewHP, statsList.get(0).getBase_stat(), finalMaxProgress);
+                                    setProgressViewProgress(progressViewAttack, statsList.get(1).getBase_stat(), finalMaxProgress);
+                                    setProgressViewProgress(progressViewDefence, statsList.get(2).getBase_stat(), finalMaxProgress);
+                                    setProgressViewProgress(progressViewSPAttack, statsList.get(3).getBase_stat(), finalMaxProgress);
+                                    setProgressViewProgress(progressViewSPDefence, statsList.get(4).getBase_stat(), finalMaxProgress);
+                                    setProgressViewProgress(progressViewSpeed, statsList.get(5).getBase_stat(), finalMaxProgress);
+                                }
                             }
                         }, 500);
 
@@ -280,8 +284,8 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<PokemonSpecies> call, Throwable t) {
-
+                    public void onFailure(@NotNull Call<PokemonSpecies> call, @NotNull Throwable t) {
+                        Log.e(TAG, "onFailure: ", t);
                     }
                 });
 
@@ -289,7 +293,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<PokemonDetails> call, Throwable t) {
+            public void onFailure(@NotNull Call<PokemonDetails> call, @NotNull Throwable t) {
                 Log.d(TAG, "onFailure: " + t.getMessage());
             }
         });

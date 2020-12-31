@@ -41,7 +41,7 @@
                     android:id="@+id/pokemon_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="#0001"
+                    android:text="@string/text_loading"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@+id/pokemon_name"
                     app:layout_constraintEnd_toEndOf="@+id/linearLayout"
@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
-                    android:text="Pokemon Name"
+                    android:text="@string/text_loading"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -66,6 +66,7 @@
                     android:layout_height="0dp"
                     android:background="@drawable/background_pokemon_profile"
                     android:gravity="center"
+                    android:paddingStart="0dp"
                     android:paddingTop="10dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="10dp"
@@ -77,6 +78,7 @@
                         android:id="@+id/base_image"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
+                        android:contentDescription="@string/back_image"
                         android:src="@drawable/image"
                         android:visibility="gone" />
 
@@ -85,7 +87,8 @@
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:layout_marginStart="20dp"
-                        android:src="@drawable/image" />
+                        android:contentDescription="@string/front_image"
+                        android:src="@drawable/ic_pokeball" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -109,7 +112,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/background_label"
                         android:padding="5dp"
-                        android:text="Grass"
+                        android:text="@string/text_loading"
                         android:textAlignment="center"
                         android:textColor="@color/colorSubText"
                         android:textSize="12sp" />
@@ -124,7 +127,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/background_label"
                         android:padding="5dp"
-                        android:text="Poison"
+                        android:text="@string/text_loading"
                         android:textAlignment="center"
                         android:textColor="@color/colorSubText"
                         android:textSize="12sp"
@@ -137,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Pokemon Type"
+                    android:text="@string/text_loading"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toTopOf="@+id/linearLayout"
                     app:layout_constraintStart_toStartOf="@+id/pokemon_name"
@@ -169,7 +172,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Species"
+                    android:text="@string/species"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -211,7 +214,7 @@
                                 android:layout_marginEnd="16dp"
                                 android:background="@drawable/background_label"
                                 android:padding="10dp"
-                                android:text="There is a plant seed on its back right from the day this Pokemon is born. The seed slowly grows larger."
+                                android:text="@string/text_loading"
                                 android:textAlignment="center"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -223,6 +226,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:layout_marginBottom="16dp"
+                                android:baselineAligned="false"
                                 android:orientation="horizontal"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="@+id/pokemon_detail"
@@ -242,17 +246,19 @@
                                         android:layout_height="wrap_content"
                                         android:background="@drawable/background_label"
                                         android:padding="10dp"
-                                        android:text="2'4&quot; (0.71 m)"
-                                        android:textAlignment="center" />
+                                        android:text="@string/text_loading"
+                                        android:textAlignment="center"
+                                        tools:ignore="TooDeepLayout" />
 
                                     <TextView
                                         android:id="@+id/textView4"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:padding="5dp"
-                                        android:text="Height"
+                                        android:text="@string/height"
                                         android:textAlignment="center"
-                                        android:textSize="10sp" />
+                                        android:textSize="10sp"
+                                        tools:ignore="SmallSp" />
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -268,7 +274,7 @@
                                         android:layout_height="wrap_content"
                                         android:background="@drawable/background_label"
                                         android:padding="10dp"
-                                        android:text="15.21 lbs (6.9 kg)"
+                                        android:text="@string/text_loading"
                                         android:textAlignment="center" />
 
                                     <TextView
@@ -276,9 +282,10 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:padding="5dp"
-                                        android:text="Weight"
+                                        android:text="@string/weight"
                                         android:textAlignment="center"
-                                        android:textSize="10sp" />
+                                        android:textSize="10sp"
+                                        tools:ignore="SmallSp" />
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -299,7 +306,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Abilities"
+                    android:text="@string/abilities"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -353,7 +360,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Base Stats"
+                    android:text="@string/base_stats"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -411,7 +418,7 @@
                                         android:layout_height="match_parent"
                                         android:gravity="center"
                                         android:padding="5dp"
-                                        android:text="HP"
+                                        android:text="@string/hp"
                                         android:textSize="12sp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -482,7 +489,7 @@
                                         android:layout_height="match_parent"
                                         android:gravity="center"
                                         android:padding="5dp"
-                                        android:text="Attack"
+                                        android:text="@string/attack"
                                         android:textSize="12sp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -554,7 +561,7 @@
                                         android:layout_height="match_parent"
                                         android:gravity="center"
                                         android:padding="5dp"
-                                        android:text="Defence"
+                                        android:text="@string/defence"
                                         android:textSize="12sp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -625,7 +632,7 @@
                                         android:layout_height="match_parent"
                                         android:gravity="center"
                                         android:padding="5dp"
-                                        android:text="Sp. Attack"
+                                        android:text="@string/sp_attack"
                                         android:textSize="12sp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -696,7 +703,7 @@
                                         android:layout_height="match_parent"
                                         android:gravity="center"
                                         android:padding="5dp"
-                                        android:text="Sp. Defence"
+                                        android:text="@string/sp_defence"
                                         android:textSize="12sp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
@@ -767,7 +774,7 @@
                                         android:layout_height="match_parent"
                                         android:gravity="center"
                                         android:padding="5dp"
-                                        android:text="Speed"
+                                        android:text="@string/speed"
                                         android:textSize="12sp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"

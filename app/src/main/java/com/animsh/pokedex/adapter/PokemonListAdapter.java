@@ -24,10 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.animsh.pokedex.R;
 import com.animsh.pokedex.model.Pokemon;
-import com.animsh.pokedex.model.PokemonDetails;
-import com.animsh.pokedex.network.PokeApiCalls;
 import com.animsh.pokedex.ui.PokemonDetailsActivity;
-import com.animsh.pokedex.utils.RetrofitClient;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -36,15 +33,17 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.skydoves.transformationlayout.TransformationLayout;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
@@ -52,12 +51,12 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final int ITEM = 0;
     private final int LOADING = 1;
     private List<Pokemon> pokemonList;
-    private final boolean retryPageLoad = false;
     private List<Pokemon> pokemonListClone;
     private Context context;
 
     private boolean isLoadingAdded = false;
     private List<Pokemon> pokemonListSearchResult;
+
 
     public PokemonListAdapter() {
     }
@@ -80,7 +79,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public static int getDominantColor1(Bitmap bitmap) {
         List<Palette.Swatch> swatchesTemp = Palette.from(bitmap).generate().getSwatches();
-        List<Palette.Swatch> swatches = new ArrayList<Palette.Swatch>(swatchesTemp);
+        List<Palette.Swatch> swatches = new ArrayList<>(swatchesTemp);
         Collections.sort(swatches, new Comparator<Palette.Swatch>() {
             @Override
             public int compare(Palette.Swatch swatch1, Palette.Swatch swatch2) {
@@ -121,7 +120,6 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             case ITEM:
                 PokemonVH viewHolderPokemon = (PokemonVH) viewHolder;
                 viewHolderPokemon.setData(pokemonList.get(i), i);
-                viewHolderPokemon.setIsRecyclable(false);
                 break;
             case LOADING:
                 break;
@@ -222,13 +220,24 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
                 String term = constraint.toString();
-                if (term.isEmpty())
+
+                if (term.isEmpty()) {
                     pokemonListSearchResult = pokemonListClone;
-                else {
+                } else {
                     pokemonListSearchResult = new ArrayList<>();
-                    for (Pokemon item : pokemonListClone)
-                        if (item.getName().toLowerCase().contains(term.toLowerCase()) | item.getUrl().toLowerCase().contains(term.toLowerCase()))
+                    String[] idSplitter;
+                    List<Integer> indexes = new ArrayList<>();
+                    int i = 0;
+                    for (Pokemon item : pokemonListClone) {
+                        idSplitter = item.getUrl().trim().split("\\/");
+                        if (item.getName().toLowerCase().contains(term.toLowerCase()) | idSplitter[idSplitter.length - 1].contains(term.toLowerCase())) {
                             pokemonListSearchResult.add(item);
+                            if (!indexes.contains(i)) {
+                                indexes.add(i);
+                            }
+                        }
+                        i++;
+                    }
                 }
                 results.values = pokemonListSearchResult;
                 return results;
@@ -276,36 +285,31 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public void setData(Pokemon pokemon, int position) {
 
             String[] pokemonUrl = pokemon.getUrl().split("\\/");
-            Log.d(TAG, "setData: " + pokemonUrl[pokemonUrl.length - 1]);
             int id = Integer.parseInt(pokemonUrl[pokemonUrl.length - 1]);
-            Retrofit retrofit = RetrofitClient.getClient();
-            PokeApiCalls pokeApiCalls = retrofit.create(PokeApiCalls.class);
-            Call<PokemonDetails> call = pokeApiCalls.getPokemonDetails(id);
-            call.enqueue(new Callback<PokemonDetails>() {
-                @Override
-                public void onResponse(Call<PokemonDetails> call, Response<PokemonDetails> response) {
-                    Log.d(TAG, "onResponse: " + response.body());
-                    PokemonDetails pokemonDetails = response.body();
-                    if (pokemonDetails.getTypes() != null) {
-                        if (pokemonDetails.getTypes().size() > 1) {
-                            type1.setText(pokemonDetails.getTypes().get(0).getType().getName().toUpperCase());
-                            type2.setVisibility(View.VISIBLE);
-                            type2.setText(pokemonDetails.getTypes().get(1).getType().getName().toUpperCase());
-                        } else if (pokemonDetails.getTypes().size() == 1) {
-                            type1.setText(pokemonDetails.getTypes().get(0).getType().getName().toUpperCase());
-                        }
+
+            try {
+                JSONObject object = new JSONObject(readJSON());
+                JSONArray types = object.getJSONArray(pokemonUrl[pokemonUrl.length - 1]);
+                if (types != null) {
+                    if (types.length() == 1) {
+                        type1.setText(types.getJSONObject(0).getJSONObject("type").getString("name").toUpperCase());
+                        type2.setVisibility(View.GONE);
+                        Log.d(TAG, types.getJSONObject(0).getJSONObject("type").getString("name"));
+                    } else if (types.length() > 1) {
+                        type1.setText(types.getJSONObject(0).getJSONObject("type").getString("name").toUpperCase());
+                        type2.setVisibility(View.VISIBLE);
+                        type2.setText(types.getJSONObject(1).getJSONObject("type").getString("name").toUpperCase());
+                        Log.d(TAG, types.getJSONObject(0).getJSONObject("type").getString("name") + " "
+                                + types.getJSONObject(1).getJSONObject("type").getString("name"));
                     }
                 }
-
-                @Override
-                public void onFailure(Call<PokemonDetails> call, Throwable t) {
-                    Log.d(TAG, "onFailure: " + t.getMessage());
-                }
-            });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             pokemonName.setText(getProperName(pokemon.getName().replace("-", " ")));
-            String newId = "";
-            String baseId = "";
+            String newId;
+            String baseId;
             if (String.valueOf(id).length() == 1) {
                 newId = "#00" + id;
                 baseId = "00" + id;
@@ -336,9 +340,6 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             for (int i = 10091; i <= 10220; i++) {
                 idArrayList.add(i);
             }
-
-            Log.d(TAG, "setData: " + idArrayList.size() + idArrayList.contains(id));
-
             if (id < 893 | id >= 10001) {
                 if (idArrayList.contains(id)) {
                     base = "https://raw.githubusercontent.com/animsh/PokemonSprites/main/imagesHQ/" + id + ".png";
@@ -377,13 +378,11 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             drawable2.setCornerRadius(20f);// set stroke width and stroke color
                             Glide.with(context).asBitmap()
                                     .load(url)
-                                    .placeholder(R.drawable.ic_pokeball)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(pokemonImage);
                             return true;
                         }
                     })
-                    .placeholder(R.drawable.ic_pokeball)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(baseImage);
 
@@ -402,6 +401,25 @@ public class PokemonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                 }
             });
+        }
+
+        public String readJSON() {
+            String json = null;
+            try {
+                // Opening data.json file
+                InputStream inputStream = context.getAssets().open("types.json");
+                int size = inputStream.available();
+                byte[] buffer = new byte[size];
+                // read values in the byte array
+                inputStream.read(buffer);
+                inputStream.close();
+                // convert byte to string
+                json = new String(buffer, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return json;
+            }
+            return json;
         }
 
     }

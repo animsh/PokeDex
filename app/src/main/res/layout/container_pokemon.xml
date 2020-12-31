@@ -6,8 +6,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="10dp">
 
-    <com.skydoves.transformationlayout.TransformationLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.skydoves.transformationlayout.TransformationLayout
         android:id="@+id/transformationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="#0001"
+                android:text="@string/text_loading"
                 android:textColor="@color/colorSubText"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/pokemon_name"
@@ -44,14 +43,15 @@
             <TextView
                 android:id="@+id/pokemon_name"
                 style="@style/MyCustomFontTextAppearance"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
-                android:text="Pokemon Name"
+                android:text="@string/text_loading"
                 android:textColor="@color/colorSubText"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/pokemon_image_container"
                 app:layout_constraintStart_toEndOf="@+id/pokemon_number"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -71,6 +71,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginStart="10dp"
+                    android:contentDescription="@string/back_image"
                     android:src="@drawable/image"
                     android:visibility="gone" />
 
@@ -79,7 +80,7 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_marginStart="10dp"
-                    android:src="@drawable/ic_pokeball" />
+                    android:contentDescription="@string/front_image" />
             </LinearLayout>
 
             <LinearLayout
@@ -102,7 +103,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/background_label"
                     android:padding="5dp"
-                    android:text="Loading.."
+                    android:text="@string/text_loading"
                     android:textAlignment="center"
                     android:textColor="@color/colorSubText"
                     android:textSize="12sp" />
@@ -115,7 +116,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/background_label"
                     android:padding="5dp"
-                    android:text="Loading.."
+                    android:text="@string/text_loading"
                     android:textAlignment="center"
                     android:textColor="@color/colorSubText"
                     android:textSize="12sp"
