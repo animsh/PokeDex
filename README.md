@@ -18,7 +18,7 @@ Pokedex is a small demo application based on modern Android application tech-sta
 </p>
 
 ## Download
-Go to the [Releases](https://github.com/skydoves/Pokedex/releases) to download the latest APK.
+Go to the [Releases](https://github.com/animsh/Pokedex/releases) to download the latest APK.
 
 
 <img src="/previews/preview.gif" align="right" width="32%"/>
