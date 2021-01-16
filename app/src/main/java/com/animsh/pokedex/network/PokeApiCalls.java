@@ -1,5 +1,6 @@
 package com.animsh.pokedex.network;
 
+import com.animsh.pokedex.model.Evolution;
 import com.animsh.pokedex.model.PokemonCollection;
 import com.animsh.pokedex.model.PokemonDetails;
 import com.animsh.pokedex.model.PokemonSpecies;
@@ -18,4 +19,8 @@ public interface PokeApiCalls {
 
     @GET("pokemon-species/{id}")
     Call<PokemonSpecies> getPokemonSpecie(@Path("id") int id);
+
+    @GET("evolution-chain/{id}/")
+    Call<Evolution> getPokemonEvolution(@Path("id") int id);
+
 }

@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.animsh.pokedex.R;
 import com.animsh.pokedex.adapter.AbilitiesAdapter;
+import com.animsh.pokedex.model.Evolution;
 import com.animsh.pokedex.model.PokemonDetails;
 import com.animsh.pokedex.model.PokemonSpecies;
 import com.animsh.pokedex.model.pokemondetails.Abilities;
@@ -53,7 +54,7 @@ import retrofit2.Retrofit;
 
 public class PokemonDetailsActivity extends AppCompatActivity {
 
-    private static final String TAG = "PokemonDetails";
+    private static final String TAG = "P_DETAILS";
     LinearLayout pokemonDetailLayout;
     ConstraintLayout pokemonContainer;
     TextView pokemonName, pokemonNumber, type1, type2, pokemonType;
@@ -126,7 +127,6 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         call.enqueue(new Callback<PokemonDetails>() {
             @Override
             public void onResponse(@NotNull Call<PokemonDetails> call, @NotNull Response<PokemonDetails> response) {
-                Log.d(TAG, "onResponse: " + response.body());
                 pokemonDetails = response.body();
                 pokemonName.setText(getProperName(pokemonDetails.getName().replace("-", " ")));
 
@@ -152,7 +152,6 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                 pokemonHeight.setText(height);
 
                 List<Abilities> abilitiesList = pokemonDetails.getAbilities();
-                Log.d(TAG, "onResponse: " + abilitiesList.get(0).getAbility().getName());
 
                 if (abilitiesList != null) {
                     pokemonAbilityRecyclerView.setAdapter(new AbilitiesAdapter(abilitiesList, PokemonDetailsActivity.this, backgroundColor, titleColor, bodyTextColor));
@@ -257,6 +256,31 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                 maxProgress = statsList.get(i).getBase_stat();
                             }
                         }
+
+                        String[] evolutionUrlParse = pokemonSpecies.getEvolution_chain().getUrl().toString().trim().split("\\/");
+                        int chainId = Integer.parseInt(evolutionUrlParse[evolutionUrlParse.length - 1]);
+                        Call<Evolution> evolutionCall = pokeApiCalls.getPokemonEvolution(chainId);
+                        evolutionCall.enqueue(new Callback<Evolution>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Evolution> call, @NotNull Response<Evolution> response) {
+                                Evolution evolution = response.body();
+                                Log.d(TAG, "onResponse: " + evolution.getId());
+                                Log.d(TAG, "onResponse: " + evolution.getChain().getSpecies().getName());
+                                if (evolution.getChain().getEvolves_to() != null) {
+                                    Log.d(TAG, "onResponse: " + evolution.getChain().getEvolves_to().get(0).getSpecies().getName());
+                                    if (evolution.getChain().getEvolves_to().get(0).getEvolves_to() != null) {
+                                        Log.d(TAG, "onResponse: " + evolution.getChain().getEvolves_to().get(0).getEvolves_to().get(0).getSpecies().getName());
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Evolution> call, @NotNull Throwable t) {
+                                Log.d(TAG, "onFailure: " + t.getMessage());
+                            }
+                        });
+
+
                         Handler handler = new Handler();
 
                         int finalMaxProgress = maxProgress;
