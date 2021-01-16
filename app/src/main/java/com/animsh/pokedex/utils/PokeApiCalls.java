@@ -17,6 +17,9 @@ public interface PokeApiCalls {
     @GET("pokemon/{id}")
     Call<PokemonDetails> getPokemonDetails(@Path("id") int id);
 
+    @GET("pokemon/{name}")
+    Call<PokemonDetails> getPokemonDetailsByName(@Path("name") String name);
+
     @GET("pokemon-species/{id}")
     Call<PokemonSpecies> getPokemonSpecie(@Path("id") int id);
 

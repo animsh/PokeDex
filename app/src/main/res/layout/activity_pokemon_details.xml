@@ -371,7 +371,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     app:cardCornerRadius="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/txt_base_stat">
@@ -824,6 +823,459 @@
 
                             </LinearLayout>
 
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/total_stat"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:textAlignment="center"
+                            android:textAllCaps="true"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                tools:ignore="TooManyViews">
+
+                <TextView
+                    android:id="@+id/txt_evolution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/evolution_chain"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txt_evolution">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <ProgressBar
+                            android:id="@+id/progressBarEvolution"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_evolution"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                app:cardCornerRadius="10dp">
+
+                                <com.skydoves.transformationlayout.TransformationLayout
+                                    android:id="@+id/transformationLayout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:transformation_duration="550">
+
+                                    <LinearLayout
+                                        android:id="@+id/pokemon_container_evolution_1"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@drawable/background_pokemon"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <View
+                                            android:id="@+id/pokemon_container_root_evolution_1"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:background="@drawable/background_pokemon_container" />
+
+                                        <LinearLayout
+                                            android:id="@+id/pokemon_image_container_evolution_1"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:background="@drawable/background_pokemon_evolution_profile"
+                                            android:gravity="center"
+                                            android:padding="10dp">
+
+                                            <ImageView
+                                                android:id="@+id/base_image_evolution_1"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:layout_marginBottom="10dp"
+                                                android:contentDescription="@string/back_image"
+                                                android:src="@drawable/image"
+                                                android:visibility="gone" />
+
+                                            <ImageView
+                                                android:id="@+id/pokemon_image_evolution_1"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="80dp"
+                                                android:contentDescription="@string/front_image" />
+                                        </LinearLayout>
+
+
+                                        <TextView
+                                            android:id="@+id/pokemon_number_evolution_1"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="5dp"
+                                            android:layout_marginTop="5dp"
+                                            android:layout_marginEnd="5dp"
+                                            android:text="@string/text_loading"
+                                            android:textAlignment="center"
+                                            android:textColor="@color/colorSubText"
+                                            android:textSize="14sp" />
+
+                                        <TextView
+                                            android:id="@+id/pokemon_name_evolution_1"
+                                            style="@style/MyCustomFontTextAppearance"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="5dp"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginEnd="5dp"
+                                            android:text="@string/text_loading"
+                                            android:textAlignment="center"
+                                            android:textColor="@color/colorSubText"
+                                            android:textSize="14sp"
+                                            android:textStyle="bold" />
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginBottom="5dp"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:id="@+id/type_1_evolution_1"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="6dp"
+                                                android:layout_marginTop="2dp"
+                                                android:layout_marginEnd="6dp"
+                                                android:layout_weight="1"
+                                                android:background="@drawable/background_label"
+                                                android:padding="5dp"
+                                                android:text="@string/text_loading"
+                                                android:textAlignment="center"
+                                                android:textColor="@color/colorSubText"
+                                                android:textSize="10sp" />
+
+                                            <TextView
+                                                android:id="@+id/type_2_evolution_1"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="6dp"
+                                                android:layout_marginTop="2dp"
+                                                android:layout_marginEnd="6dp"
+                                                android:layout_marginBottom="2dp"
+                                                android:layout_weight="1"
+                                                android:background="@drawable/background_label"
+                                                android:padding="5dp"
+                                                android:text="@string/text_loading"
+                                                android:textAlignment="center"
+                                                android:textColor="@color/colorSubText"
+                                                android:textSize="10sp"
+                                                android:visibility="gone" />
+                                        </LinearLayout>
+                                    </LinearLayout>
+                                </com.skydoves.transformationlayout.TransformationLayout>
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:id="@+id/evArrow1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:text="@string/text_loading"
+                                android:textSize="10sp"
+                                android:visibility="gone"
+                                app:drawableTopCompat="@drawable/ic_round_arrow_forward_24" />
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/evolutionLevel2"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:visibility="gone"
+                                app:cardCornerRadius="10dp">
+
+                                <com.skydoves.transformationlayout.TransformationLayout
+                                    android:id="@+id/transformationLayout2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:transformation_duration="550">
+
+                                    <LinearLayout
+                                        android:id="@+id/pokemon_container_evolution_2"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@drawable/background_pokemon"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <View
+                                            android:id="@+id/pokemon_container_root_evolution_2"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:background="@drawable/background_pokemon_container" />
+
+                                        <LinearLayout
+                                            android:id="@+id/pokemon_image_container_evolution_2"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:background="@drawable/background_pokemon_evolution_profile"
+                                            android:gravity="center"
+                                            android:padding="10dp">
+
+                                            <ImageView
+                                                android:id="@+id/base_image_evolution_2"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:layout_marginBottom="10dp"
+                                                android:contentDescription="@string/back_image"
+                                                android:src="@drawable/image"
+                                                android:visibility="gone" />
+
+                                            <ImageView
+                                                android:id="@+id/pokemon_image_evolution_2"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="80dp"
+                                                android:contentDescription="@string/front_image" />
+                                        </LinearLayout>
+
+
+                                        <TextView
+                                            android:id="@+id/pokemon_number_evolution_2"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="5dp"
+                                            android:layout_marginTop="5dp"
+                                            android:layout_marginEnd="5dp"
+                                            android:text="@string/text_loading"
+                                            android:textAlignment="center"
+                                            android:textColor="@color/colorSubText"
+                                            android:textSize="14sp" />
+
+                                        <TextView
+                                            android:id="@+id/pokemon_name_evolution_2"
+                                            style="@style/MyCustomFontTextAppearance"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="5dp"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginEnd="5dp"
+                                            android:text="@string/text_loading"
+                                            android:textAlignment="center"
+                                            android:textColor="@color/colorSubText"
+                                            android:textSize="14sp"
+                                            android:textStyle="bold" />
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginBottom="5dp"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:id="@+id/type_1_evolution_2"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="6dp"
+                                                android:layout_marginTop="2dp"
+                                                android:layout_marginEnd="6dp"
+                                                android:layout_weight="1"
+                                                android:background="@drawable/background_label"
+                                                android:padding="5dp"
+                                                android:text="@string/text_loading"
+                                                android:textAlignment="center"
+                                                android:textColor="@color/colorSubText"
+                                                android:textSize="10sp" />
+
+                                            <TextView
+                                                android:id="@+id/type_2_evolution_2"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="6dp"
+                                                android:layout_marginTop="2dp"
+                                                android:layout_marginEnd="6dp"
+                                                android:layout_marginBottom="2dp"
+                                                android:layout_weight="1"
+                                                android:background="@drawable/background_label"
+                                                android:padding="5dp"
+                                                android:text="@string/text_loading"
+                                                android:textAlignment="center"
+                                                android:textColor="@color/colorSubText"
+                                                android:textSize="10sp"
+                                                android:visibility="gone" />
+                                        </LinearLayout>
+                                    </LinearLayout>
+                                </com.skydoves.transformationlayout.TransformationLayout>
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:id="@+id/evArrow2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:text="@string/text_loading"
+                                android:textSize="10sp"
+                                android:visibility="gone"
+                                app:drawableTopCompat="@drawable/ic_round_arrow_forward_24" />
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/evolutionLevel3"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:visibility="gone"
+                                app:cardCornerRadius="10dp">
+
+                                <com.skydoves.transformationlayout.TransformationLayout
+                                    android:id="@+id/transformationLayout3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:transformation_duration="550">
+
+                                    <LinearLayout
+                                        android:id="@+id/pokemon_container_evolution_3"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@drawable/background_pokemon"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <View
+                                            android:id="@+id/pokemon_container_root_evolution_3"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:background="@drawable/background_pokemon_container" />
+
+                                        <LinearLayout
+                                            android:id="@+id/pokemon_image_container_evolution_3"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:background="@drawable/background_pokemon_evolution_profile"
+                                            android:gravity="center"
+                                            android:padding="10dp">
+
+                                            <ImageView
+                                                android:id="@+id/base_image_evolution_3"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:layout_marginBottom="10dp"
+                                                android:contentDescription="@string/back_image"
+                                                android:src="@drawable/image"
+                                                android:visibility="gone" />
+
+                                            <ImageView
+                                                android:id="@+id/pokemon_image_evolution_3"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="80dp"
+                                                android:contentDescription="@string/front_image" />
+                                        </LinearLayout>
+
+
+                                        <TextView
+                                            android:id="@+id/pokemon_number_evolution_3"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="5dp"
+                                            android:layout_marginTop="5dp"
+                                            android:layout_marginEnd="5dp"
+                                            android:text="@string/text_loading"
+                                            android:textAlignment="center"
+                                            android:textColor="@color/colorSubText"
+                                            android:textSize="14sp" />
+
+                                        <TextView
+                                            android:id="@+id/pokemon_name_evolution_3"
+                                            style="@style/MyCustomFontTextAppearance"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="5dp"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginEnd="5dp"
+                                            android:text="@string/text_loading"
+                                            android:textAlignment="center"
+                                            android:textColor="@color/colorSubText"
+                                            android:textSize="14sp"
+                                            android:textStyle="bold" />
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="2dp"
+                                            android:layout_marginBottom="5dp"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:id="@+id/type_1_evolution_3"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="6dp"
+                                                android:layout_marginTop="2dp"
+                                                android:layout_marginEnd="6dp"
+                                                android:layout_weight="1"
+                                                android:background="@drawable/background_label"
+                                                android:padding="5dp"
+                                                android:text="@string/text_loading"
+                                                android:textAlignment="center"
+                                                android:textColor="@color/colorSubText"
+                                                android:textSize="10sp" />
+
+                                            <TextView
+                                                android:id="@+id/type_2_evolution_3"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="6dp"
+                                                android:layout_marginTop="2dp"
+                                                android:layout_marginEnd="6dp"
+                                                android:layout_marginBottom="2dp"
+                                                android:layout_weight="1"
+                                                android:background="@drawable/background_label"
+                                                android:padding="5dp"
+                                                android:text="@string/text_loading"
+                                                android:textAlignment="center"
+                                                android:textColor="@color/colorSubText"
+                                                android:textSize="10sp"
+                                                android:visibility="gone" />
+                                        </LinearLayout>
+                                    </LinearLayout>
+                                </com.skydoves.transformationlayout.TransformationLayout>
+                            </androidx.cardview.widget.CardView>
 
                         </LinearLayout>
 

@@ -16,7 +16,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,9 +44,18 @@ import com.skydoves.transformationlayout.TransformationCompat;
 import com.skydoves.transformationlayout.TransformationLayout;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,7 +71,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
     TextView pokemonName, pokemonNumber, type1, type2, pokemonType;
     ImageView pokemonImage;
 
-    TextView pokemonDetail, pokemonHeight, pokemonWeight, txtSpecies, txtAbilities, txtBaseStats;
+    TextView pokemonDetail, pokemonHeight, pokemonWeight, txtSpecies, txtAbilities, txtBaseStats, txtEvolution, txtTotalStat;
     RecyclerView pokemonAbilityRecyclerView;
 
     ProgressView progressViewHP, progressViewAttack, progressViewDefence, progressViewSPAttack, progressViewSPDefence, progressViewSpeed;
@@ -68,9 +79,29 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
     PokemonDetails pokemonDetails;
 
-    ProgressBar progressBarSpecies, progressBarAbilities, progressBarBaseStat;
+    ProgressBar progressBarSpecies, progressBarAbilities, progressBarBaseStat, progressBarEvolution;
     ConstraintLayout layoutSpecies;
-    LinearLayout layoutStat;
+    LinearLayout layoutStat, layoutEvolution;
+
+    LinearLayout pokemonContainerEvolution1, pokemonContainerEvolution2, pokemonContainerEvolution3;
+    TextView pokemonNameEvolution1, pokemonNumberEvolution1, type1Evolution1, type2Evolution1;
+    TextView pokemonNameEvolution2, pokemonNumberEvolution2, type1Evolution2, type2Evolution2;
+    TextView pokemonNameEvolution3, pokemonNumberEvolution3, type1Evolution3, type2Evolution3;
+    ImageView mainImageEvolution1, baseImageEvolution1;
+    ImageView mainImageEvolution2, baseImageEvolution2;
+    ImageView mainImageEvolution3, baseImageEvolution3;
+    TextView enArrow1, enArrow2;
+    CardView evolutionLevel2, evolutionLevel3;
+
+    public static Palette.Swatch getDominantSwatch(Palette palette) {
+        // find most-represented swatch based on population
+        return Collections.max(palette.getSwatches(), new Comparator<Palette.Swatch>() {
+            @Override
+            public int compare(Palette.Swatch sw1, Palette.Swatch sw2) {
+                return Integer.compare(sw1.getPopulation(), sw2.getPopulation());
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,11 +137,12 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         txtSpecies.setTextColor(titleColor);
         txtAbilities.setTextColor(titleColor);
         txtBaseStats.setTextColor(titleColor);
+        txtEvolution.setTextColor(titleColor);
 
         progressBarBaseStat.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
         progressBarAbilities.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
         progressBarSpecies.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
-
+        progressBarEvolution.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
 
         setUpProgressView(progressViewHP, labelHP, backgroundColor, titleColor, bodyTextColor);
         setUpProgressView(progressViewAttack, labelAttack, backgroundColor, titleColor, bodyTextColor);
@@ -118,7 +150,6 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         setUpProgressView(progressViewSPAttack, labelSPAttack, backgroundColor, titleColor, bodyTextColor);
         setUpProgressView(progressViewSPDefence, labelSPDefence, backgroundColor, titleColor, bodyTextColor);
         setUpProgressView(progressViewSpeed, labelSpeed, backgroundColor, titleColor, bodyTextColor);
-
 
         Retrofit retrofit = RetrofitClient.getClient();
         PokeApiCalls pokeApiCalls = retrofit.create(PokeApiCalls.class);
@@ -266,10 +297,18 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                 Evolution evolution = response.body();
                                 Log.d(TAG, "onResponse: " + evolution.getId());
                                 Log.d(TAG, "onResponse: " + evolution.getChain().getSpecies().getName());
+                                setUpPokemonEvolution(evolution.getChain().getSpecies().getName(), pokemonNameEvolution1, pokemonNumberEvolution1, type1Evolution1, type2Evolution1, mainImageEvolution1, baseImageEvolution1, pokemonContainerEvolution1);
                                 if (evolution.getChain().getEvolves_to() != null && !evolution.getChain().getEvolves_to().isEmpty()) {
-                                    Log.d(TAG, "onResponse: " + evolution.getChain().getEvolves_to().get(0).getSpecies().getName());
+                                    enArrow1.setText(MessageFormat.format("LEVEL {0}", evolution.getChain().getEvolves_to().get(0).getEvolution_details().get(0).getMin_level()));
+                                    enArrow1.setVisibility(View.VISIBLE);
+                                    evolutionLevel2.setVisibility(View.VISIBLE);
+                                    setUpPokemonEvolution(evolution.getChain().getEvolves_to().get(0).getSpecies().getName(), pokemonNameEvolution2, pokemonNumberEvolution2, type1Evolution2, type2Evolution2, mainImageEvolution2, baseImageEvolution2, pokemonContainerEvolution2);
+
                                     if (evolution.getChain().getEvolves_to().get(0).getEvolves_to() != null && !evolution.getChain().getEvolves_to().get(0).getEvolves_to().isEmpty()) {
-                                        Log.d(TAG, "onResponse: " + evolution.getChain().getEvolves_to().get(0).getEvolves_to().get(0).getSpecies().getName());
+                                        enArrow2.setText(MessageFormat.format("LEVEL {0}", evolution.getChain().getEvolves_to().get(0).getEvolves_to().get(0).getEvolution_details().get(0).getMin_level()));
+                                        enArrow2.setVisibility(View.VISIBLE);
+                                        evolutionLevel3.setVisibility(View.VISIBLE);
+                                        setUpPokemonEvolution(evolution.getChain().getEvolves_to().get(0).getEvolves_to().get(0).getSpecies().getName(), pokemonNameEvolution3, pokemonNumberEvolution3, type1Evolution3, type2Evolution3, mainImageEvolution3, baseImageEvolution3, pokemonContainerEvolution3);
                                     }
                                 }
                             }
@@ -279,7 +318,6 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                 Log.d(TAG, "onFailure: " + t.getMessage());
                             }
                         });
-
 
                         Handler handler = new Handler();
 
@@ -291,6 +329,8 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                 pokemonAbilityRecyclerView.setVisibility(View.VISIBLE);
                                 progressBarSpecies.setVisibility(View.GONE);
                                 layoutSpecies.setVisibility(View.VISIBLE);
+                                progressBarEvolution.setVisibility(View.GONE);
+                                layoutEvolution.setVisibility(View.VISIBLE);
                                 progressBarBaseStat.setVisibility(View.GONE);
                                 if (statsList.size() > 0) {
                                     layoutStat.setVisibility(View.VISIBLE);
@@ -300,9 +340,15 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                     setProgressViewProgress(progressViewSPAttack, statsList.get(3).getBase_stat(), finalMaxProgress);
                                     setProgressViewProgress(progressViewSPDefence, statsList.get(4).getBase_stat(), finalMaxProgress);
                                     setProgressViewProgress(progressViewSpeed, statsList.get(5).getBase_stat(), finalMaxProgress);
+                                    int totalStat = 0;
+                                    for (int i = 0; i < 6; i++) {
+                                        totalStat += statsList.get(i).getBase_stat();
+                                    }
+                                    String stat = "TOTAL  " + totalStat;
+                                    txtTotalStat.setText(stat);
                                 }
                             }
-                        }, 500);
+                        }, 1000);
 
 
                     }
@@ -323,6 +369,139 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void setUpPokemonEvolution(String pokemonName, TextView pName, TextView pId, TextView enType1, TextView enType2, ImageView mainImage, ImageView baseImage, LinearLayout pContainer) {
+        Retrofit retrofit = RetrofitClient.getClient();
+        PokeApiCalls pokeApiCalls = retrofit.create(PokeApiCalls.class);
+        Call<PokemonDetails> pokemonDetailsCall = pokeApiCalls.getPokemonDetailsByName(pokemonName);
+        pokemonDetailsCall.enqueue(new Callback<PokemonDetails>() {
+            @Override
+            public void onResponse(@NotNull Call<PokemonDetails> call, @NotNull Response<PokemonDetails> response) {
+                PokemonDetails pokeDetails = response.body();
+                pName.setText(getProperName(pokeDetails.getName().replace("-", " ")));
+
+                int id = pokeDetails.getId();
+                String newId;
+                String baseId;
+                if (String.valueOf(id).length() == 1) {
+                    newId = "#00" + id;
+                    baseId = "00" + id;
+                } else if (String.valueOf(id).length() == 2) {
+                    newId = "#0" + id;
+                    baseId = "0" + id;
+                } else if (String.valueOf(id).length() == 3) {
+                    newId = "#" + id;
+                    baseId = String.valueOf(id);
+                } else {
+                    newId = "#" + id;
+                    baseId = String.valueOf(id);
+                }
+                pId.setText(newId);
+
+                try {
+                    JSONObject object = new JSONObject(readJSON());
+                    JSONArray types = object.getJSONArray(String.valueOf(id));
+                    if (types != null) {
+                        if (types.length() == 1) {
+                            enType1.setText(types.getJSONObject(0).getJSONObject("type").getString("name").toUpperCase());
+                            enType2.setVisibility(View.GONE);
+                        } else if (types.length() > 1) {
+                            enType1.setText(types.getJSONObject(0).getJSONObject("type").getString("name").toUpperCase());
+                            enType2.setVisibility(View.VISIBLE);
+                            enType2.setText(types.getJSONObject(1).getJSONObject("type").getString("name").toUpperCase());
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String base;
+                String url;
+
+                ArrayList<Integer> idArrayList = new ArrayList<>();
+                for (int i = 10027; i <= 10032; i++) {
+                    idArrayList.add(i);
+                }
+                idArrayList.add(10061);
+                for (int i = 10080; i <= 10085; i++) {
+                    idArrayList.add(i);
+                }
+                for (int i = 10091; i <= 10220; i++) {
+                    idArrayList.add(i);
+                }
+                if (id < 893 | id >= 10001) {
+                    if (idArrayList.contains(id)) {
+                        base = "https://raw.githubusercontent.com/animsh/PokemonSprites/main/imagesHQ/" + id + ".png";
+                        url = "https://raw.githubusercontent.com/animsh/PokemonSprites/main/imagesHQ/" + id + ".png";
+                    } else {
+                        base = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
+                        url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
+                    }
+                } else {
+                    base = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + baseId + ".png";
+                    url = "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + baseId + ".png";
+                }
+                Glide.with(PokemonDetailsActivity.this).asBitmap()
+                        .load(base)
+                        .listener(new RequestListener<Bitmap>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                Palette p = Palette.from(resource).generate();
+                                List<Palette.Swatch> pss = p.getSwatches();
+                                Palette.Swatch palette = getDominantSwatch(p);
+                                pContainer.setBackgroundColor(palette.getRgb());
+                                pName.setTextColor(palette.getTitleTextColor());
+                                pId.setTextColor(palette.getTitleTextColor());
+                                GradientDrawable drawable1 = (GradientDrawable) enType1.getBackground();
+                                GradientDrawable drawable2 = (GradientDrawable) enType2.getBackground();
+                                drawable1.setStroke(2, palette.getBodyTextColor());
+                                drawable1.setCornerRadius(20f);// set stroke width and stroke color
+                                drawable2.setStroke(2, palette.getBodyTextColor());
+                                drawable2.setCornerRadius(20f);// set stroke width and stroke color
+                                enType1.setTextColor(palette.getBodyTextColor());
+                                enType2.setTextColor(palette.getBodyTextColor());
+                                Glide.with(PokemonDetailsActivity.this).asBitmap()
+                                        .load(url)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .into(mainImage);
+                                return true;
+                            }
+                        })
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(baseImage);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<PokemonDetails> call, @NotNull Throwable t) {
+
+            }
+        });
+
+    }
+
+    private String readJSON() {
+        String json = null;
+        try {
+            // Opening data.json file
+            InputStream inputStream = this.getAssets().open("types.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            // read values in the byte array
+            inputStream.read(buffer);
+            inputStream.close();
+            // convert byte to string
+            json = new String(buffer, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return json;
+        }
+        return json;
     }
 
     public String getProperName(String oldName) {
@@ -365,6 +544,8 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         txtSpecies = findViewById(R.id.txt_species);
         txtAbilities = findViewById(R.id.txt_abilities);
         txtBaseStats = findViewById(R.id.txt_base_stat);
+        txtEvolution = findViewById(R.id.txt_evolution);
+        txtTotalStat = findViewById(R.id.total_stat);
 
         pokemonDetailLayout = findViewById(R.id.pokemon_details_container);
         pokemonContainer = findViewById(R.id.pokemon_container);
@@ -387,9 +568,41 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         progressBarSpecies = findViewById(R.id.progressBarSContainer);
         progressBarAbilities = findViewById(R.id.progressBarAContainer);
         progressBarBaseStat = findViewById(R.id.progressBarBSContainer);
+        progressBarEvolution = findViewById(R.id.progressBarEvolution);
 
         layoutSpecies = findViewById(R.id.layout_species);
         layoutStat = findViewById(R.id.layout_stats);
+        layoutEvolution = findViewById(R.id.layout_evolution);
+
+        evolutionLevel2 = findViewById(R.id.evolutionLevel2);
+        evolutionLevel3 = findViewById(R.id.evolutionLevel3);
+
+        baseImageEvolution1 = findViewById(R.id.base_image_evolution_1);
+        mainImageEvolution1 = findViewById(R.id.pokemon_image_evolution_1);
+        pokemonNameEvolution1 = findViewById(R.id.pokemon_name_evolution_1);
+        pokemonNumberEvolution1 = findViewById(R.id.pokemon_number_evolution_1);
+        type1Evolution1 = findViewById(R.id.type_1_evolution_1);
+        type2Evolution1 = findViewById(R.id.type_2_evolution_1);
+        pokemonContainerEvolution1 = findViewById(R.id.pokemon_container_evolution_1);
+
+        baseImageEvolution2 = findViewById(R.id.base_image_evolution_2);
+        mainImageEvolution2 = findViewById(R.id.pokemon_image_evolution_2);
+        pokemonNameEvolution2 = findViewById(R.id.pokemon_name_evolution_2);
+        pokemonNumberEvolution2 = findViewById(R.id.pokemon_number_evolution_2);
+        type1Evolution2 = findViewById(R.id.type_1_evolution_2);
+        type2Evolution2 = findViewById(R.id.type_2_evolution_2);
+        pokemonContainerEvolution2 = findViewById(R.id.pokemon_container_evolution_2);
+
+        baseImageEvolution3 = findViewById(R.id.base_image_evolution_3);
+        mainImageEvolution3 = findViewById(R.id.pokemon_image_evolution_3);
+        pokemonNameEvolution3 = findViewById(R.id.pokemon_name_evolution_3);
+        pokemonNumberEvolution3 = findViewById(R.id.pokemon_number_evolution_3);
+        type1Evolution3 = findViewById(R.id.type_1_evolution_3);
+        type2Evolution3 = findViewById(R.id.type_2_evolution_3);
+        pokemonContainerEvolution3 = findViewById(R.id.pokemon_container_evolution_3);
+
+        enArrow1 = findViewById(R.id.evArrow1);
+        enArrow2 = findViewById(R.id.evArrow2);
 
     }
 
@@ -424,4 +637,5 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         }
         drawable.setCornerRadius(20f);
     }
+
 }
