@@ -22,14 +22,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.animsh.pokedex.R;
 import com.animsh.pokedex.adapter.AbilitiesAdapter;
-import com.animsh.pokedex.model.Evolution;
 import com.animsh.pokedex.model.PokemonDetails;
 import com.animsh.pokedex.model.PokemonSpecies;
 import com.animsh.pokedex.model.pokemondetails.Abilities;
+import com.animsh.pokedex.model.pokemondetails.Evolution;
 import com.animsh.pokedex.model.pokemondetails.Stats;
 import com.animsh.pokedex.model.pokemonspecies.FlavorTextEntries;
 import com.animsh.pokedex.model.pokemonspecies.Genera;
-import com.animsh.pokedex.network.PokeApiCalls;
+import com.animsh.pokedex.utils.PokeApiCalls;
 import com.animsh.pokedex.utils.RetrofitClient;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -266,9 +266,9 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                 Evolution evolution = response.body();
                                 Log.d(TAG, "onResponse: " + evolution.getId());
                                 Log.d(TAG, "onResponse: " + evolution.getChain().getSpecies().getName());
-                                if (evolution.getChain().getEvolves_to() != null) {
+                                if (evolution.getChain().getEvolves_to() != null && !evolution.getChain().getEvolves_to().isEmpty()) {
                                     Log.d(TAG, "onResponse: " + evolution.getChain().getEvolves_to().get(0).getSpecies().getName());
-                                    if (evolution.getChain().getEvolves_to().get(0).getEvolves_to() != null) {
+                                    if (evolution.getChain().getEvolves_to().get(0).getEvolves_to() != null && !evolution.getChain().getEvolves_to().get(0).getEvolves_to().isEmpty()) {
                                         Log.d(TAG, "onResponse: " + evolution.getChain().getEvolves_to().get(0).getEvolves_to().get(0).getSpecies().getName());
                                     }
                                 }

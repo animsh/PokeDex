@@ -1,4 +1,4 @@
-package com.animsh.pokedex.model;
+package com.animsh.pokedex.model.pokemondetails;
 
 /**
  * Created by animsh on 1/16/2021.

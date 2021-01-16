@@ -1,9 +1,9 @@
-package com.animsh.pokedex.network;
+package com.animsh.pokedex.utils;
 
-import com.animsh.pokedex.model.Evolution;
 import com.animsh.pokedex.model.PokemonCollection;
 import com.animsh.pokedex.model.PokemonDetails;
 import com.animsh.pokedex.model.PokemonSpecies;
+import com.animsh.pokedex.model.pokemondetails.Evolution;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -1,13 +1,13 @@
 package com.animsh.pokedex.model.pokemonspecies;
 
-import com.animsh.pokedex.model.pokemondetails.Version;
+import com.animsh.pokedex.model.pokemondetails.NamedAPIResource;
 
 public class FlavorTextEntries {
     private String flavor_text;
-    private Language language;
-    private Version version;
+    private NamedAPIResource language;
+    private NamedAPIResource version;
 
-    public FlavorTextEntries(String flavor_text, Language language, Version version) {
+    public FlavorTextEntries(String flavor_text, NamedAPIResource language, NamedAPIResource version) {
         this.flavor_text = flavor_text;
         this.language = language;
         this.version = version;
@@ -17,11 +17,11 @@ public class FlavorTextEntries {
         return flavor_text;
     }
 
-    public Language getLanguage() {
+    public NamedAPIResource getLanguage() {
         return language;
     }
 
-    public Version getVersion() {
+    public NamedAPIResource getVersion() {
         return version;
     }
 }

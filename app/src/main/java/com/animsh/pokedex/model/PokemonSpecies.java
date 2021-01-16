@@ -1,5 +1,6 @@
 package com.animsh.pokedex.model;
 
+import com.animsh.pokedex.model.pokemondetails.EvolutionChain;
 import com.animsh.pokedex.model.pokemonspecies.FlavorTextEntries;
 import com.animsh.pokedex.model.pokemonspecies.Genera;
 

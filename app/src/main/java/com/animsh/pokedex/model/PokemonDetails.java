@@ -1,10 +1,9 @@
 package com.animsh.pokedex.model;
 
 import com.animsh.pokedex.model.pokemondetails.Abilities;
-import com.animsh.pokedex.model.pokemondetails.Forms;
 import com.animsh.pokedex.model.pokemondetails.GameIndices;
 import com.animsh.pokedex.model.pokemondetails.Moves;
-import com.animsh.pokedex.model.pokemondetails.Species;
+import com.animsh.pokedex.model.pokemondetails.NamedAPIResource;
 import com.animsh.pokedex.model.pokemondetails.Sprites;
 import com.animsh.pokedex.model.pokemondetails.Stats;
 import com.animsh.pokedex.model.pokemondetails.Types;
@@ -17,7 +16,7 @@ public class PokemonDetails {
 
     private List<Abilities> abilities;
     private int base_experience;
-    private List<Forms> forms;
+    private List<NamedAPIResource> forms;
     private List<GameIndices> game_indices;
     private int height;
     private Array[] held_items;
@@ -27,13 +26,16 @@ public class PokemonDetails {
     private List<Moves> moves;
     private String name;
     private String order;
-    private Species species;
+    private NamedAPIResource species;
     private Sprites sprites;
     private List<Stats> stats;
     private List<Types> types;
     private int weight;
 
-    public PokemonDetails(List<Abilities> abilities, int base_experience, List<Forms> forms, List<GameIndices> game_indices, int height, Array[] held_items, int id, boolean is_default, String location_area_encounters, List<Moves> moves, String name, String order, Species species, Sprites sprites, List<Stats> stats, List<Types> types, int weight) {
+    public PokemonDetails() {
+    }
+
+    public PokemonDetails(List<Abilities> abilities, int base_experience, List<NamedAPIResource> forms, List<GameIndices> game_indices, int height, Array[] held_items, int id, boolean is_default, String location_area_encounters, List<Moves> moves, String name, String order, NamedAPIResource species, Sprites sprites, List<Stats> stats, List<Types> types, int weight) {
         this.abilities = abilities;
         this.base_experience = base_experience;
         this.forms = forms;
@@ -53,9 +55,6 @@ public class PokemonDetails {
         this.weight = weight;
     }
 
-    public PokemonDetails() {
-    }
-
     public List<Abilities> getAbilities() {
         return abilities;
     }
@@ -64,7 +63,7 @@ public class PokemonDetails {
         return base_experience;
     }
 
-    public List<Forms> getForms() {
+    public List<NamedAPIResource> getForms() {
         return forms;
     }
 
@@ -104,7 +103,7 @@ public class PokemonDetails {
         return order;
     }
 
-    public Species getSpecies() {
+    public NamedAPIResource getSpecies() {
         return species;
     }
 

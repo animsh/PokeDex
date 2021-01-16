@@ -2,9 +2,9 @@ package com.animsh.pokedex.model.pokemondetails;
 
 public class GameIndices {
     private int game_index;
-    private Version version;
+    private NamedAPIResource version;
 
-    public GameIndices(int game_index, Version version) {
+    public GameIndices(int game_index, NamedAPIResource version) {
         this.game_index = game_index;
         this.version = version;
     }
@@ -13,7 +13,7 @@ public class GameIndices {
         return game_index;
     }
 
-    public Version getVersion() {
+    public NamedAPIResource getVersion() {
         return version;
     }
 }

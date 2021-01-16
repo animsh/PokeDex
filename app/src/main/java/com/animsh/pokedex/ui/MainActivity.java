@@ -18,7 +18,7 @@ import com.animsh.materialsearchbar.MaterialSearchBar;
 import com.animsh.pokedex.R;
 import com.animsh.pokedex.adapter.PokemonListAdapter;
 import com.animsh.pokedex.model.PokemonCollection;
-import com.animsh.pokedex.network.PokeApiCalls;
+import com.animsh.pokedex.utils.PokeApiCalls;
 import com.animsh.pokedex.utils.RetrofitClient;
 import com.skydoves.transformationlayout.TransformationCompat;
 

@@ -13,4 +13,56 @@ public class Sprites {
     private Other other;
     private Versions versions;
 
+    public Sprites(String back_default, String back_female, String back_shiny, String back_shiny_female, String front_default, String front_female, String front_shiny, String front_shiny_female, Other other, Versions versions) {
+        this.back_default = back_default;
+        this.back_female = back_female;
+        this.back_shiny = back_shiny;
+        this.back_shiny_female = back_shiny_female;
+        this.front_default = front_default;
+        this.front_female = front_female;
+        this.front_shiny = front_shiny;
+        this.front_shiny_female = front_shiny_female;
+        this.other = other;
+        this.versions = versions;
+    }
+
+    public String getBack_default() {
+        return back_default;
+    }
+
+    public String getBack_female() {
+        return back_female;
+    }
+
+    public String getBack_shiny() {
+        return back_shiny;
+    }
+
+    public String getBack_shiny_female() {
+        return back_shiny_female;
+    }
+
+    public String getFront_default() {
+        return front_default;
+    }
+
+    public String getFront_female() {
+        return front_female;
+    }
+
+    public String getFront_shiny() {
+        return front_shiny;
+    }
+
+    public String getFront_shiny_female() {
+        return front_shiny_female;
+    }
+
+    public Other getOther() {
+        return other;
+    }
+
+    public Versions getVersions() {
+        return versions;
+    }
 }

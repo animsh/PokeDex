@@ -2,12 +2,12 @@ package com.animsh.pokedex.model.pokemondetails;
 
 public class Types {
     private int slot;
-    private Type type;
+    private NamedAPIResource type;
 
     public Types() {
     }
 
-    public Types(int slot, Type type) {
+    public Types(int slot, NamedAPIResource type) {
         this.slot = slot;
         this.type = type;
     }
@@ -16,15 +16,7 @@ public class Types {
         return slot;
     }
 
-    public void setSlot(int slot) {
-        this.slot = slot;
-    }
-
-    public Type getType() {
+    public NamedAPIResource getType() {
         return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
     }
 }

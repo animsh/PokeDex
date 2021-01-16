@@ -1,4 +1,4 @@
-package com.animsh.pokedex.model;
+package com.animsh.pokedex.model.pokemondetails;
 
 import java.util.List;
 

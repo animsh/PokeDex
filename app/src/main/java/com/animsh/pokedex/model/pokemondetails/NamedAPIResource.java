@@ -1,10 +1,13 @@
 package com.animsh.pokedex.model.pokemondetails;
 
-public class Forms {
+/**
+ * Created by animsh on 1/16/2021.
+ */
+public class NamedAPIResource {
     private String name;
     private String url;
 
-    public Forms(String name, String url) {
+    public NamedAPIResource(String name, String url) {
         this.name = name;
         this.url = url;
     }
