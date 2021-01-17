@@ -318,6 +318,12 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                 Log.d(TAG, "onFailure: " + t.getMessage());
                             }
                         });
+                        if (pokemonSpecies.getVarieties().size() != 0 && pokemonSpecies.getVarieties() != null) {
+                            Log.d(TAG, "onResponse: " + pokemonSpecies.getVarieties().size());
+                            for (int i = 0; i < pokemonSpecies.getVarieties().size(); i++) {
+                                Log.d(TAG, "onResponse: " + pokemonSpecies.getVarieties().get(i).getPokemon().getName());
+                            }
+                        }
 
                         Handler handler = new Handler();
 

@@ -10,14 +10,13 @@ public class PokemonSpecies {
     private List<FlavorTextEntries> flavor_text_entries;
     private List<Genera> genera;
     private EvolutionChain evolution_chain;
+    private List<Variety> varieties;
 
-    public PokemonSpecies() {
-    }
-
-    public PokemonSpecies(List<FlavorTextEntries> flavor_text_entries, List<Genera> genera, EvolutionChain evolution_chain) {
+    public PokemonSpecies(List<FlavorTextEntries> flavor_text_entries, List<Genera> genera, EvolutionChain evolution_chain, List<Variety> varieties) {
         this.flavor_text_entries = flavor_text_entries;
         this.genera = genera;
         this.evolution_chain = evolution_chain;
+        this.varieties = varieties;
     }
 
     public List<FlavorTextEntries> getFlavor_text_entries() {
@@ -30,5 +29,9 @@ public class PokemonSpecies {
 
     public EvolutionChain getEvolution_chain() {
         return evolution_chain;
+    }
+
+    public List<Variety> getVarieties() {
+        return varieties;
     }
 }
