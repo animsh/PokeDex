@@ -1,5 +1,6 @@
 package com.animsh.pokedex.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -19,11 +20,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.animsh.pokedex.R;
 import com.animsh.pokedex.adapter.AbilitiesAdapter;
+import com.animsh.pokedex.adapter.VarietiesAdapter;
+import com.animsh.pokedex.model.Pokemon;
 import com.animsh.pokedex.model.PokemonDetails;
 import com.animsh.pokedex.model.PokemonSpecies;
 import com.animsh.pokedex.model.pokemondetails.Abilities;
@@ -31,6 +35,7 @@ import com.animsh.pokedex.model.pokemondetails.Evolution;
 import com.animsh.pokedex.model.pokemondetails.Stats;
 import com.animsh.pokedex.model.pokemonspecies.FlavorTextEntries;
 import com.animsh.pokedex.model.pokemonspecies.Genera;
+import com.animsh.pokedex.utils.GridSpacingItemDecoration;
 import com.animsh.pokedex.utils.PokeApiCalls;
 import com.animsh.pokedex.utils.RetrofitClient;
 import com.bumptech.glide.Glide;
@@ -71,7 +76,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
     TextView pokemonName, pokemonNumber, type1, type2, pokemonType;
     ImageView pokemonImage;
 
-    TextView pokemonDetail, pokemonHeight, pokemonWeight, txtSpecies, txtAbilities, txtBaseStats, txtEvolution, txtTotalStat;
+    TextView pokemonDetail, pokemonHeight, pokemonWeight, txtSpecies, txtAbilities, txtBaseStats, txtEvolution, txtTotalStat, txtVariety;
     RecyclerView pokemonAbilityRecyclerView;
 
     ProgressView progressViewHP, progressViewAttack, progressViewDefence, progressViewSPAttack, progressViewSPDefence, progressViewSpeed;
@@ -79,8 +84,8 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
     PokemonDetails pokemonDetails;
 
-    ProgressBar progressBarSpecies, progressBarAbilities, progressBarBaseStat, progressBarEvolution;
-    ConstraintLayout layoutSpecies;
+    ProgressBar progressBarSpecies, progressBarAbilities, progressBarBaseStat, progressBarEvolution, progressBarVariety;
+    ConstraintLayout layoutSpecies, layoutVariety;
     LinearLayout layoutStat, layoutEvolution;
 
     LinearLayout pokemonContainerEvolution1, pokemonContainerEvolution2, pokemonContainerEvolution3;
@@ -92,6 +97,12 @@ public class PokemonDetailsActivity extends AppCompatActivity {
     ImageView mainImageEvolution3, baseImageEvolution3;
     TextView enArrow1, enArrow2;
     CardView evolutionLevel2, evolutionLevel3;
+    TransformationLayout transformationLayout1, transformationLayout2, transformationLayout3;
+
+    RecyclerView varietiesRecyclerView;
+    int spaceCount = 2;
+    int spacing = 30;
+    boolean includeEdge = true;
 
     public static Palette.Swatch getDominantSwatch(Palette palette) {
         // find most-represented swatch based on population
@@ -138,11 +149,13 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         txtAbilities.setTextColor(titleColor);
         txtBaseStats.setTextColor(titleColor);
         txtEvolution.setTextColor(titleColor);
+        txtVariety.setTextColor(titleColor);
 
         progressBarBaseStat.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
         progressBarAbilities.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
         progressBarSpecies.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
         progressBarEvolution.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
+        progressBarVariety.getIndeterminateDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN);
 
         setUpProgressView(progressViewHP, labelHP, backgroundColor, titleColor, bodyTextColor);
         setUpProgressView(progressViewAttack, labelAttack, backgroundColor, titleColor, bodyTextColor);
@@ -188,7 +201,6 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                     pokemonAbilityRecyclerView.setAdapter(new AbilitiesAdapter(abilitiesList, PokemonDetailsActivity.this, backgroundColor, titleColor, bodyTextColor));
                     pokemonAbilityRecyclerView.setLayoutManager(new LinearLayoutManager(PokemonDetailsActivity.this));
                     pokemonAbilityRecyclerView.setHasFixedSize(true);
-
                 }
 
                 List<Stats> statsList = pokemonDetails.getStats();
@@ -297,18 +309,18 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                 Evolution evolution = response.body();
                                 Log.d(TAG, "onResponse: " + evolution.getId());
                                 Log.d(TAG, "onResponse: " + evolution.getChain().getSpecies().getName());
-                                setUpPokemonEvolution(evolution.getChain().getSpecies().getName(), pokemonNameEvolution1, pokemonNumberEvolution1, type1Evolution1, type2Evolution1, mainImageEvolution1, baseImageEvolution1, pokemonContainerEvolution1);
+                                setUpPokemonEvolution(evolution.getChain().getSpecies().getName(), pokemonNameEvolution1, pokemonNumberEvolution1, type1Evolution1, type2Evolution1, mainImageEvolution1, baseImageEvolution1, pokemonContainerEvolution1, transformationLayout1);
                                 if (evolution.getChain().getEvolves_to() != null && !evolution.getChain().getEvolves_to().isEmpty()) {
                                     enArrow1.setText(MessageFormat.format("LEVEL {0}", evolution.getChain().getEvolves_to().get(0).getEvolution_details().get(0).getMin_level()));
                                     enArrow1.setVisibility(View.VISIBLE);
                                     evolutionLevel2.setVisibility(View.VISIBLE);
-                                    setUpPokemonEvolution(evolution.getChain().getEvolves_to().get(0).getSpecies().getName(), pokemonNameEvolution2, pokemonNumberEvolution2, type1Evolution2, type2Evolution2, mainImageEvolution2, baseImageEvolution2, pokemonContainerEvolution2);
+                                    setUpPokemonEvolution(evolution.getChain().getEvolves_to().get(0).getSpecies().getName(), pokemonNameEvolution2, pokemonNumberEvolution2, type1Evolution2, type2Evolution2, mainImageEvolution2, baseImageEvolution2, pokemonContainerEvolution2, transformationLayout2);
 
                                     if (evolution.getChain().getEvolves_to().get(0).getEvolves_to() != null && !evolution.getChain().getEvolves_to().get(0).getEvolves_to().isEmpty()) {
                                         enArrow2.setText(MessageFormat.format("LEVEL {0}", evolution.getChain().getEvolves_to().get(0).getEvolves_to().get(0).getEvolution_details().get(0).getMin_level()));
                                         enArrow2.setVisibility(View.VISIBLE);
                                         evolutionLevel3.setVisibility(View.VISIBLE);
-                                        setUpPokemonEvolution(evolution.getChain().getEvolves_to().get(0).getEvolves_to().get(0).getSpecies().getName(), pokemonNameEvolution3, pokemonNumberEvolution3, type1Evolution3, type2Evolution3, mainImageEvolution3, baseImageEvolution3, pokemonContainerEvolution3);
+                                        setUpPokemonEvolution(evolution.getChain().getEvolves_to().get(0).getEvolves_to().get(0).getSpecies().getName(), pokemonNameEvolution3, pokemonNumberEvolution3, type1Evolution3, type2Evolution3, mainImageEvolution3, baseImageEvolution3, pokemonContainerEvolution3, transformationLayout3);
                                     }
                                 }
                             }
@@ -318,15 +330,26 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                 Log.d(TAG, "onFailure: " + t.getMessage());
                             }
                         });
+                        List<Pokemon> pokemonVariety = new ArrayList<>();
                         if (pokemonSpecies.getVarieties().size() != 0 && pokemonSpecies.getVarieties() != null) {
                             Log.d(TAG, "onResponse: " + pokemonSpecies.getVarieties().size());
-                            for (int i = 0; i < pokemonSpecies.getVarieties().size(); i++) {
-                                Log.d(TAG, "onResponse: " + pokemonSpecies.getVarieties().get(i).getPokemon().getName());
+                            if (pokemonSpecies.getVarieties().size() == 1) {
+                                layoutVariety.setVisibility(View.GONE);
+                            } else {
+                                layoutVariety.setVisibility(View.VISIBLE);
+                                for (int i = 0; i < pokemonSpecies.getVarieties().size(); i++) {
+                                    pokemonVariety.add(pokemonSpecies.getVarieties().get(i).getPokemon());
+                                    Log.d(TAG, "onResponse: " + pokemonVariety.get(i).getName());
+                                }
+                                VarietiesAdapter varietiesAdapter = new VarietiesAdapter(pokemonVariety, PokemonDetailsActivity.this);
+                                varietiesRecyclerView.setLayoutManager(new GridLayoutManager(PokemonDetailsActivity.this, 2));
+                                varietiesRecyclerView.setAdapter(varietiesAdapter);
+                                varietiesRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spaceCount, spacing, includeEdge));
+                                varietiesAdapter.notifyDataSetChanged();
                             }
                         }
 
                         Handler handler = new Handler();
-
                         int finalMaxProgress = maxProgress;
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -337,6 +360,8 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                 layoutSpecies.setVisibility(View.VISIBLE);
                                 progressBarEvolution.setVisibility(View.GONE);
                                 layoutEvolution.setVisibility(View.VISIBLE);
+                                progressBarVariety.setVisibility(View.GONE);
+                                varietiesRecyclerView.setVisibility(View.VISIBLE);
                                 progressBarBaseStat.setVisibility(View.GONE);
                                 if (statsList.size() > 0) {
                                     layoutStat.setVisibility(View.VISIBLE);
@@ -377,7 +402,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void setUpPokemonEvolution(String pokemonName, TextView pName, TextView pId, TextView enType1, TextView enType2, ImageView mainImage, ImageView baseImage, LinearLayout pContainer) {
+    private void setUpPokemonEvolution(String pokemonName, TextView pName, TextView pId, TextView enType1, TextView enType2, ImageView mainImage, ImageView baseImage, LinearLayout pContainer, TransformationLayout transformationLayout) {
         Retrofit retrofit = RetrofitClient.getClient();
         PokeApiCalls pokeApiCalls = retrofit.create(PokeApiCalls.class);
         Call<PokemonDetails> pokemonDetailsCall = pokeApiCalls.getPokemonDetailsByName(pokemonName);
@@ -476,6 +501,21 @@ public class PokemonDetailsActivity extends AppCompatActivity {
                                         .load(url)
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                                         .into(mainImage);
+                                pContainer.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if (palette != null) {
+                                            Bundle bundle = transformationLayout.withContext(PokemonDetailsActivity.this, "myTransitionName");
+                                            Intent pokemonDetails = new Intent(PokemonDetailsActivity.this, PokemonDetailsActivity.class);
+                                            pokemonDetails.putExtra("bColor", palette.getRgb());
+                                            pokemonDetails.putExtra("tColor", palette.getTitleTextColor());
+                                            pokemonDetails.putExtra("btColor", palette.getBodyTextColor());
+                                            pokemonDetails.putExtra("id", id);
+                                            pokemonDetails.putExtra("TransformationParams", transformationLayout.getParcelableParams());
+                                            startActivity(pokemonDetails, bundle);
+                                        }
+                                    }
+                                });
                                 return true;
                             }
                         })
@@ -488,7 +528,6 @@ public class PokemonDetailsActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private String readJSON() {
@@ -552,6 +591,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         txtBaseStats = findViewById(R.id.txt_base_stat);
         txtEvolution = findViewById(R.id.txt_evolution);
         txtTotalStat = findViewById(R.id.total_stat);
+        txtVariety = findViewById(R.id.txt_varieties);
 
         pokemonDetailLayout = findViewById(R.id.pokemon_details_container);
         pokemonContainer = findViewById(R.id.pokemon_container);
@@ -575,6 +615,7 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         progressBarAbilities = findViewById(R.id.progressBarAContainer);
         progressBarBaseStat = findViewById(R.id.progressBarBSContainer);
         progressBarEvolution = findViewById(R.id.progressBarEvolution);
+        progressBarVariety = findViewById(R.id.progressBarVariety);
 
         layoutSpecies = findViewById(R.id.layout_species);
         layoutStat = findViewById(R.id.layout_stats);
@@ -607,9 +648,15 @@ public class PokemonDetailsActivity extends AppCompatActivity {
         type2Evolution3 = findViewById(R.id.type_2_evolution_3);
         pokemonContainerEvolution3 = findViewById(R.id.pokemon_container_evolution_3);
 
+        transformationLayout1 = findViewById(R.id.transformationLayout);
+        transformationLayout2 = findViewById(R.id.transformationLayout2);
+        transformationLayout3 = findViewById(R.id.transformationLayout3);
+
         enArrow1 = findViewById(R.id.evArrow1);
         enArrow2 = findViewById(R.id.evArrow2);
 
+        varietiesRecyclerView = findViewById(R.id.rv_varieties);
+        layoutVariety = findViewById(R.id.layout_variety);
     }
 
     public void setProgressViewProgress(ProgressView progressView, float progress, float maxProgress) {
